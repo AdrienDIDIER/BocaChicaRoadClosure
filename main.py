@@ -7,8 +7,11 @@ db = get_database()
 
 # GET ROAD CLOASURE
 df = get_data_table("https://www.cameroncountytx.gov/spacex/")
+print(df)
 row_added, row_updated = insert_new_road_cloasure(db, df)
+print(row_added, row_updated)
 dates_list = get_rc_to_check(db)
+print(dates_list)
 
 # GET INFOS ABOUT FLIGHT DURING ROAD CLOASURE
 df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
