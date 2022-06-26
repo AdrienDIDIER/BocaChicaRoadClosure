@@ -41,7 +41,7 @@ def tweet_road_cloasure(api, df):
         if row["created"] is True:
             row["created"] = "🇺🇸 NEW RC : \n"
         else:
-            row["created"] = "us RC UDPATE : \n"
+            row["created"] = "🇺🇸 RC UDPATE : \n"
 
         # FLIGHT
         if row["Flight"] == 0:
