@@ -15,9 +15,7 @@ print(dates_list)
 
 # GET INFOS ABOUT FLIGHT DURING ROAD CLOASURE
 df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
-print(df_flight)
 flight_update(db, df_flight)
-print("update")
 # ---- DELETE PDF FILES
 delete_download_file(".pdf")
 

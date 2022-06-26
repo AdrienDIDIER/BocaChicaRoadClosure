@@ -25,11 +25,11 @@ def tweet_road_cloasure(api, df):
     for index, row in df.iterrows():
         # STATUS
         if "Canceled" in row["Status"]:
-            row["Status"] = "🚧 Road cloasure canceled"
+            row["Status"] = "🚧 Road closure canceled"
         elif "Scheduled" in row["Status"]:
-            row["Status"] = "🚧 Road cloasure scheduled"
+            row["Status"] = "🚧 Road closure scheduled"
         elif "Possible" in row["Status"]:
-            row["Status"] = "🚧 Possible road cloasure"
+            row["Status"] = "🚧 Possible road closure"
         
         # DATETIME
         if row["Date"].strftime("%d") != row["DateTime_Stop"].strftime("%d"):
@@ -45,9 +45,9 @@ def tweet_road_cloasure(api, df):
 
         # FLIGHT
         if row["Flight"] == 0:
-            row["Flight"] = "❌ NB : This is a non flight cloasure"
+            row["Flight"] = "❌ NB : This is a non flight closure"
         elif row["Flight"] == 1:
-            row["Flight"] = "✅ NB : This can be a flight cloasure"
+            row["Flight"] = "✅ NB : This can be a flight closure"
         else:
             row["Flight"] = ""
         
