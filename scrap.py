@@ -116,7 +116,7 @@ def get_infos_flight(url, dates_list):
             if date_formated  not in dates_list:
                 continue
 
-            print("Dowloading data for date : " + date)
+            # print("Dowloading data for date : " + date)
 
             date = soup_page.find("h1").text.split(";")[1]
             pdf_link = soup_page.find('article').find(class_="gem-button-container").find("a").get('href')
