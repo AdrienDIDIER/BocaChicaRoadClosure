@@ -14,7 +14,7 @@ def get_database():
     return client['bocachicaroadclosure']
     
 def get_data_old_date(client):
-    db_infos = client["RoadClosure"].find()
+    db_infos = client[os.getenv('MONGO_DB_URL_TABLE')].find()
     data = pd.DataFrame(columns=['Date', 'Flight'])
     for info in db_infos:
         if 'Flight' in info.keys():
@@ -32,14 +32,14 @@ def insert_new_road_closure(client, df):
 
     list_id_new = []
     for row in df.to_dict(orient='records'):
-        result = client["RoadClosure"].replace_one(
+        result = client[os.getenv('MONGO_DB_URL_TABLE')].replace_one(
             {'index': row.get('index')}, row, upsert=True
         )
         if result.upserted_id is not None:
             list_id_new.append(result.upserted_id)
 
     list_id_change = []
-    df_data = pd.DataFrame(list(client["RoadClosure"].find({})))
+    df_data = pd.DataFrame(list(client[os.getenv('MONGO_DB_URL_TABLE')].find({})))
     df_changes = pd.concat([df_data_old,df_data]).drop_duplicates(keep=False)
     for obj in df_changes['_id'].unique():
         if obj not in list_id_new:
@@ -47,14 +47,14 @@ def insert_new_road_closure(client, df):
     return list_id_new, list_id_change
 
 def get_rc_with_id(client, ids, created):
-    rcs = client["RoadClosure"].find({'_id' : {"$in": ids}})
+    rcs = client[os.getenv('MONGO_DB_URL_TABLE')].find({'_id' : {"$in": ids}})
     df = pd.DataFrame(list(rcs))
     if len(df) > 0:
         df['created'] = created
     return df
 
 def get_rc_to_check(client):
-    rcs = client["RoadClosure"].find({'Flight': -1})
+    rcs = client[os.getenv('MONGO_DB_URL_TABLE')].find({'Flight': -1})
     result = []
     for rc in rcs:
         result.append(datetime.strftime(rc['Date'], "%Y-%m-%d"))
@@ -62,7 +62,7 @@ def get_rc_to_check(client):
 
 def flight_update(client, df):
     for row in df.to_dict(orient='records'):
-        client["RoadClosure"].update_many(
+        client[os.getenv('MONGO_DB_URL_TABLE')].update_many(
             {'Date': row.get('Date')}, {"$set": row}, 
         )
     return 'PDF Checking'
