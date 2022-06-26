@@ -43,12 +43,12 @@ def get_data_table(url):
 
 def download_file(download_url, filename):
     response = urllib.request.urlopen(download_url)    
-    file = open('.\\tmp\\' + filename + ".pdf", 'wb')
+    file = open(os.getenv('TMP_URL') + filename + ".pdf", 'wb')
     file.write(response.read())
     file.close()
 
 def delete_download_file(filename_type):
-    dir_name = ".\\tmp\\"
+    dir_name = os.getenv('TMP_URL')
     list_files = os.listdir(dir_name)
 
     for file in list_files:
@@ -57,7 +57,7 @@ def delete_download_file(filename_type):
 
 def pdf_to_text(filename):
 
-    file =  ".\\tmp\\" + filename + ".pdf"
+    file =  os.getenv('TMP_URL') + filename + ".pdf"
     # pytesseract.pytesseract.tesseract_cmd = (
     #     os.getenv('TESSERACT_URL')
     # )
