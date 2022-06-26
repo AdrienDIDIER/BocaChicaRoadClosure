@@ -80,9 +80,9 @@ def tweet_road_closure(api, df):
         
         # DATETIME
         if row["Date"].strftime("%d") != row["DateTime_Stop"].strftime("%d"):
-            row["DateTime_Stop"] = row["DateTime_Stop"].strftime("%A, %B %d, %Y - %I:%H")
+            row["DateTime_Stop"] = row["DateTime_Stop"].strftime("%A, %d %B, %Y - %H:%m")
         else:
-            row["DateTime_Stop"] = row["DateTime_Stop"].strftime("%I:%H")
+            row["DateTime_Stop"] = row["DateTime_Stop"].strftime("%H:%m")
 
         # TYPE
         if row["created"] is True:
@@ -110,7 +110,7 @@ def tweet_road_closure(api, df):
             ": " +
             row["Status"] +
             " pour le " +
-            row["Date"].strftime("%A, %B %d, %Y") +
+            row["Date"].strftime("%A, %d %B, %Y") +
             " de "+
             row["DateTime_Start"].strftime("%H:%M") +
             " à "+
