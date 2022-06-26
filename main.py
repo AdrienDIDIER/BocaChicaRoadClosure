@@ -33,7 +33,6 @@ def job():
 
     print("Stop Execution")
 
-job()
 schedule.every(5).minutes.do(job)
 
 while 1:
