@@ -54,7 +54,7 @@ def get_rc_with_id(client, ids, created):
     return df
 
 def get_rc_to_check(client):
-    rcs = client["Roadclosure"].find({'Flight': -1})
+    rcs = client["RoadClosure"].find({'Flight': -1})
     result = []
     for rc in rcs:
         result.append(datetime.strftime(rc['Date'], "%Y-%m-%d"))
