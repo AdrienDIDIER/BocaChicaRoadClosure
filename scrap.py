@@ -46,6 +46,7 @@ def download_file(download_url, filename):
     file = open(os.getenv('TMP_URL') + filename + ".pdf", 'wb')
     file.write(response.read())
     file.close()
+    return
 
 def delete_download_file(filename_type):
     dir_name = os.getenv('TMP_URL')
@@ -54,6 +55,7 @@ def delete_download_file(filename_type):
     for file in list_files:
         if file.endswith(filename_type):
             os.remove(os.path.join(dir_name, file))
+    return
 
 def pdf_to_text(filename):
 
