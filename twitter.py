@@ -1,7 +1,6 @@
 import tweepy
 import os
 import locale
-import time
 
 from dotenv import load_dotenv
 
@@ -14,7 +13,7 @@ def connect_api_twitter():
     api = tweepy.API(auth)
     return api
 
-def tweet_road_cloasure(api, df):
+def tweet_road_closure(api, df):
 
     message = []
     message_fr = []
