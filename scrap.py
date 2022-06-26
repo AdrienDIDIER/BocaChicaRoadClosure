@@ -46,6 +46,7 @@ def download_file(download_url, filename):
     file = open(os.getenv('TMP_URL') + filename + ".pdf", 'wb')
     file.write(response.read())
     file.close()
+    print("dl ok")
     return
 
 def delete_download_file(filename_type):
@@ -121,7 +122,7 @@ def get_infos_flight(url, dates_list):
             pdf_link = soup_page.find('article').find(class_="gem-button-container").find("a").get('href')
             download_file(pdf_link, date)
             text = pdf_to_text(date)
-
+            print("img to text ok")
             if "non-flight testing" in text:
                 df.loc[len(df.index)] = [date, 0]
             elif " flight testing" in text:
