@@ -69,7 +69,7 @@ def tweet_road_closure(api, df):
     df["DateTime_Stop"] = df["DateTime_Stop"].dt.tz_convert(tz='Europe/Paris')
 
     for index, row in df.iterrows():
-        locale.setlocale(locale.LC_TIME,'')
+        locale.setlocale(locale.LC_TIME,'fr_FR')
         # STATUS
         if "Canceled" in row["Status"]:
             row["Status"] = "Fermeture des routes annulées"
