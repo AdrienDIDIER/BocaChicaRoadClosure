@@ -34,6 +34,7 @@ Pillow==9.1.1
 pipreqs==0.4.11
 prov==2.0.0
 pydot==1.4.2
+schedule==1.1.0
 pymongo==4.1.1
 PyMuPDF==1.20.0
 pyparsing==3.0.9
