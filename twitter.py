@@ -121,8 +121,8 @@ def tweet_road_closure(api, df):
         )
     print("fr ok")
     for n in range(len(message)):
-        api.update_status(message[n])
-        api.update_status(message_fr[n])
+        print(api.update_status(message[n]))
+        print(api.update_status(message_fr[n]))
 
 
 
