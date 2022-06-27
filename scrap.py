@@ -83,7 +83,6 @@ def get_infos_flight(url, dates_list):
     response = requests.get(url)
     if response.status_code != 200:
         print("Error fetching page home")
-        exit()
     else:
         content = response.content
 
@@ -98,7 +97,6 @@ def get_infos_flight(url, dates_list):
         response_page = requests.get(page_url)
         if response_page.status_code != 200:
             print("Error fetching page pdf")
-            exit()
         else:
             content_page = response_page.content
 
