@@ -125,6 +125,4 @@ def tweet_road_closure(api, df):
         print(message_fr[n])
         print(api.update_status(message[n]))
         print(api.update_status(message_fr[n]))
-
-
-
+    return
