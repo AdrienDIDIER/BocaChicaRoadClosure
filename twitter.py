@@ -11,6 +11,13 @@ def connect_api_twitter():
     auth = tweepy.OAuthHandler(os.getenv("TWITTER_API_KEY"), os.getenv("TWITTER_API_SECRET_KEY"))
     auth.set_access_token(os.getenv("TWITTER_ACCESS_TOKEN"), os.getenv("TWITTER_ACCESS_TOKEN_SECRET"))
     api = tweepy.API(auth)
+    
+    try:
+        api.verify_credentials()
+        print("Authentication Successful")
+    except:
+        print("Authentication Error")
+
     return api
 
 def tweet_road_closure(api, df):
