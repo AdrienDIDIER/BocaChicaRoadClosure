@@ -33,7 +33,7 @@ def get_data_table(url):
 
     del df["DateTime"]
 
-    df["Date"] = pd.to_datetime(df['Date'])
+    df["Date"] = pd.to_datetime(df['Date'], format="%A, %B %d, %Y")
 
     df['index'] = (
         df['DateTime_Start'].dt.strftime('%Y-%M-%d %H%m%s').str.replace(" ", "_", regex=False)
