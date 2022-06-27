@@ -4,38 +4,30 @@ from twitter import *
 import schedule
 import time
 
-def job():
-    print("Start Execution")
-    # DATABASE
-    db = get_database()
+print("Start Execution")
+# DATABASE
+db = get_database()
 
-    # GET ROAD closure
-    df = get_data_table("https://www.cameroncountytx.gov/spacex/")
-    row_added, row_updated = insert_new_road_closure(db, df)
-    dates_list = get_rc_to_check(db)
+# GET ROAD closure
+df = get_data_table("https://www.cameroncountytx.gov/spacex/")
+row_added, row_updated = insert_new_road_closure(db, df)
+dates_list = get_rc_to_check(db)
 
-    # GET INFOS ABOUT FLIGHT DURING ROAD closure
-    df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
-    flight_update(db, df_flight)
-    # ---- DELETE PDF FILES
-    delete_download_file(".pdf")
+# GET INFOS ABOUT FLIGHT DURING ROAD closure
+df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
+flight_update(db, df_flight)
+# ---- DELETE PDF FILES
+delete_download_file(".pdf")
 
-    # GET DATA OF NEW AND UPDATED ROAD closure
-    df_created = get_rc_with_id(db, row_added, True)
-    df_updated = get_rc_with_id(db, row_updated, False)
+# GET DATA OF NEW AND UPDATED ROAD closure
+df_created = get_rc_with_id(db, row_added, True)
+df_updated = get_rc_with_id(db, row_updated, False)
 
-    df_to_tweet = pd.concat([df_created, df_updated])
+df_to_tweet = pd.concat([df_created, df_updated])
 
-    if len(df_to_tweet) > 0:
-        print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
-        api = connect_api_twitter()
-        tweet_road_closure(api, df_to_tweet)
+if len(df_to_tweet) > 0:
+    print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
+    api = connect_api_twitter()
+    tweet_road_closure(api, df_to_tweet)
 
-    print("Stop Execution")
-
-schedule.every(5).minutes.do(job)
-
-while 1:
-    schedule.run_pending()
-    time.sleep(1)
- 
+print("Stop Execution")
