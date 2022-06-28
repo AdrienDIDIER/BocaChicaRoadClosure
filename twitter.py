@@ -28,7 +28,6 @@ def tweet_road_closure(api, df):
     df["DateTime_Start"] = df["DateTime_Start"].dt.tz_localize(tz='America/Chicago')
     df["DateTime_Stop"] = df["DateTime_Stop"].dt.tz_localize(tz='America/Chicago')
 
-    print("go tweet")
     for index, row in df.iterrows():
         # STATUS
         if "Canceled" in row["Status"]:
@@ -72,7 +71,7 @@ def tweet_road_closure(api, df):
             " Boca Chica Time \n"+
             row["Flight"]
         )
-    print("en ok")
+
     df["DateTime_Start"] = df["DateTime_Start"].dt.tz_convert(tz='Europe/Paris')
     df["DateTime_Stop"] = df["DateTime_Stop"].dt.tz_convert(tz='Europe/Paris')
 
@@ -126,10 +125,15 @@ def tweet_road_closure(api, df):
             " Heure de Paris \n"+
             row["Flight"]
         )
-    print("fr ok")
     for n in range(len(message)):
-        print(message[n])
-        print(message_fr[n])
-        print(api.update_status(message[n]))
-        print(api.update_status(message_fr[n]))
+        try:
+            api.update_status(message[n])
+        except Exception as e:
+            print(e)
+        
+        try:
+            api.update_status(message_fr[n])
+        except Exception as e:
+            print(e)
+        
     return
