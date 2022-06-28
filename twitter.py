@@ -141,7 +141,6 @@ def tweet_road_closure(api, df):
 
 def check_OP_Mary(api, account_name, nb_tweets):
     tweets = api.user_timeline(screen_name=account_name,count=nb_tweets)
-    print(tweets)
     tweets_clean = []
     for t in tweets:
         tweets_clean.append(t.__dict__)
@@ -151,5 +150,5 @@ def check_OP_Mary(api, account_name, nb_tweets):
 
     for _, row in df_tweets.iterrows():
         if (('alert') and ('static fire')) in row['text'].lower():
-            api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥")*
+            api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥\n" + "🚀🔥Alerte recu pour un potentiel static fire d'un Ship ou d'un Booster🚀🔥")
     return
