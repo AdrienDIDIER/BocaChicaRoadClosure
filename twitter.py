@@ -154,7 +154,10 @@ def check_OP_Mary(api, db_client, account_name, nb_tweets):
             if not get_last_checking_SF(db_client, row['id']):
                 print('Tweet')
                 set_last_checking_SF(db_client, row['id'])
-                api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥\n" + "🚀🔥Alerte recu pour un potentiel static fire d'un Ship ou d'un Booster🚀🔥")
+                try:
+                    api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥\n" + "🚀🔥Alerte recu pour un potentiel static fire d'un Ship ou d'un Booster🚀🔥")
+                except Exception as e:
+                    print(e)
             else:
                 print('No Tweet')
     return
