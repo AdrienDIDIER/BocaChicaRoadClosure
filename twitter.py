@@ -1,6 +1,7 @@
 import tweepy
 import os
 import locale
+import pandas as pd
 
 from dotenv import load_dotenv
 
@@ -136,4 +137,19 @@ def tweet_road_closure(api, df):
         except Exception as e:
             print(e)
         
+    return
+
+def check_OP_Mary(api, account_name, nb_tweets):
+    tweets = api.user_timeline(screen_name=account_name,count=nb_tweets)
+    print(tweets)
+    tweets_clean = []
+    for t in tweets:
+        tweets_clean.append(t.__dict__)
+
+    df_tweets= pd.DataFrame.from_records(tweets_clean)
+    df_tweets.drop(["_api", "_json"],axis=1, inplace=True)
+
+    for _, row in df_tweets.iterrows():
+        if (('alert') and ('static fire')) in row['text'].lower():
+            api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥")*
     return
