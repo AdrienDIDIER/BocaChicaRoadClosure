@@ -31,6 +31,6 @@ if len(df_to_tweet) > 0:
     print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
     tweet_road_closure(api, df_to_tweet)
     
-check_OP_Mary(api, db, "Adrii_Heiin", 1)
+check_OP_Mary(api, db, "BocaChicaGal", 1)
 
 print("Stop Execution")
