@@ -25,10 +25,12 @@ df_updated = get_rc_with_id(db, row_updated, False)
 
 df_to_tweet = pd.concat([df_created, df_updated])
 
+api = connect_api_twitter()
+
 if len(df_to_tweet) > 0:
     print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
-    api = connect_api_twitter()
     tweet_road_closure(api, df_to_tweet)
-    check_OP_Mary(api, db, "Adrii_Heiin", 1)
+    
+check_OP_Mary(api, db, "Adrii_Heiin", 1)
 
 print("Stop Execution")
