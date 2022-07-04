@@ -162,4 +162,4 @@ def getScreenNSF(url):
     crop_frame = frame[990:1080, 240:99999]
     cv2.imwrite(os.getenv("TMP_URL") + f"NSF.png", crop_frame)
 
-    return img_to_text(os.getenv("TMP_URL") + f"NSF.png")
+    return "Infos NSF : \n" + img_to_text(os.getenv("TMP_URL") + f"NSF.png")
