@@ -135,9 +135,9 @@ def get_infos_flight(url, dates_list):
 def img_to_text(url):
     translator = Translator()
 
-    pytesseract.pytesseract.tesseract_cmd = (
-        os.getenv('TESSERACT_URL')
-    )
+    # pytesseract.pytesseract.tesseract_cmd = (
+    #     os.getenv('TESSERACT_URL')
+    # )
 
     text = str(((pytesseract.image_to_string(Image.open(url)))))
     textEN = text.replace("-\n", "")
