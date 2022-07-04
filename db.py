@@ -67,15 +67,14 @@ def flight_update(client, df):
         )
     return 'PDF Checking'
 
-def set_last_checking_SF(client, id):
-    client[os.getenv('MONGO_DB_URL_TABLE_RC')].replace_one(
+def set_last_tweet(client, id, table):
+    client[os.getenv(table)].replace_one(
         {"last_id":id}, {"last_id":id}, upsert=True
     )
     return 
 
-def get_last_checking_SF(client, id):
-    res = client[os.getenv('MONGO_DB_URL_TABLE_RC')].find_one({"last_id": id})
+def get_last_tweet(client, id, table):
+    res = client[os.getenv(table)].find_one({"last_id": id})
     if res is not None:
         return True
     return False
-    

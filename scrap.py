@@ -6,7 +6,10 @@ import pytesseract
 import os
 import numpy as np
 import dateutil.parser
+import cv2
+import youtube_dl
 
+from googletrans import Translator
 from datetime import datetime
 from tempfile import TemporaryDirectory
 from bs4 import BeautifulSoup
@@ -128,3 +131,35 @@ def get_infos_flight(url, dates_list):
     df['Date'] = df['Date'].str.replace('Original', '')
     df['Date'] = pd.to_datetime(df['Date'])
     return df
+
+def img_to_text(url):
+    translator = Translator()
+
+    pytesseract.pytesseract.tesseract_cmd = (
+        os.getenv('TESSERACT_URL')
+    )
+
+    text = str(((pytesseract.image_to_string(Image.open(url)))))
+    textEN = text.replace("-\n", "")
+    textFR = translator.translate(textEN, src="en", dest="fr")
+    os.remove(url)
+    return "🇺🇸 " + textEN + "🇫🇷 " + textFR.text
+
+def getScreenNSF(url):
+    video_url = url
+    ydl_opts = {'quiet':'True'}
+    ydl = youtube_dl.YoutubeDL(ydl_opts)
+    info_dict = ydl.extract_info(video_url, download=False)
+    formats = info_dict.get('formats', None)
+
+    for f in formats:
+        if f.get('format', None) == '96 - 1920x1080':
+            url = f.get('url', None)
+            getScreenNSF(url)
+
+    cap = cv2.VideoCapture(url)
+    _, frame = cap.read()
+    crop_frame = frame[990:1080, 240:99999]
+    cv2.imwrite(os.getenv("TMP_URL") + f"NSF.png", crop_frame)
+
+    return img_to_text(os.getenv("TMP_URL") + f"NSF.png")

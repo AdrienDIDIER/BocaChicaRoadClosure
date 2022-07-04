@@ -1,3 +1,4 @@
+from gettext import textdomain
 from db import *
 from scrap import *
 from twitter import *
@@ -32,5 +33,8 @@ if len(df_to_tweet) > 0:
     tweet_road_closure(api, df_to_tweet)
     
 check_OP_Mary(api, db, "BocaChicaGal", 1)
+textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
+textNSF = textNSF + "az"
+check_NSF(api, db, textNSF)
 
 print("Stop Execution")

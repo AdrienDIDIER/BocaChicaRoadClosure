@@ -151,13 +151,25 @@ def check_OP_Mary(api, db_client, account_name, nb_tweets):
 
     for _, row in df_tweets.iterrows():
         if (('alert') and ('static fire')) in row['text'].lower():
-            if not get_last_checking_SF(db_client, row['id']):
-                print('Tweet')
-                set_last_checking_SF(db_client, row['id'])
+            if not get_last_tweet(db_client, row['id'], "MONGO_DB_URL_TABLE_RC"):
+                print('Tweet Mary')
+                set_last_tweet(db_client, row['id'], "MONGO_DB_URL_TABLE_RC")
                 try:
                     api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥\n" + "🚀🔥Alerte recu pour un potentiel static fire d'un Ship ou d'un Booster🚀🔥")
                 except Exception as e:
                     print(e)
             else:
-                print('No Tweet')
+                print('No Tweet Mary')
     return
+
+def check_NSF(api, db_client, text):
+
+    if not get_last_tweet(db_client, text, "MONGO_DB_URL_TABLE_PT"):
+        print('Tweet NSF')
+        try:
+            api.update_status(text)
+        except Exception as e:
+            print(e)
+        set_last_tweet(db_client, text, "MONGO_DB_URL_TABLE_PT")
+    else:
+        print('No Tweet NSF')
