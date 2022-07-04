@@ -33,7 +33,7 @@ if len(df_to_tweet) > 0:
     tweet_road_closure(api, df_to_tweet)
     
 check_OP_Mary(api, db, "BocaChicaGal", 1)
-textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
-check_NSF(api, db, textNSF)
+# textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
+# check_NSF(api, db, textNSF)
 
 print("Stop Execution")
