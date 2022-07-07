@@ -191,7 +191,8 @@ def getScreenNSF(url):
     crop_frame = frame[995:1080, 240:99999]
     cv2.imwrite(os.getenv("TMP_URL") + f"NSF.png", crop_frame)
 
-    return "Infos NSF : \n" + img_to_text(os.getenv("TMP_URL") + f"NSF.png")
-
-textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
-print(textNSF)
+    ret = img_to_text(os.getenv("TMP_URL") + f"NSF.png")
+    if ret==None:
+        return None
+    else:
+        return "Infos NSF : \n" + ret
