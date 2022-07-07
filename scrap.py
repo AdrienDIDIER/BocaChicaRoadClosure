@@ -171,7 +171,8 @@ def img_to_text(url):
         textEN = re.sub(r'[^A-Za-z0-9 ]+', '', textEN) 
         textFR = translator.translate(textEN, src="en", dest="fr")
         os.remove(url)
-        return "🇺🇸 " + textEN + "\n" + "🇫🇷 " + textFR.text
+        #  + "\n" + "🇫🇷 " + textFR.text
+        return "🇺🇸 " + textEN
     else:
         os.remove(url)
         return None
