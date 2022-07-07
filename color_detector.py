@@ -32,15 +32,22 @@ class BackgroundColorDetector():
         average_red = red / sample
         average_green = green / sample
         average_blue = blue / sample
-        # print("Average RGB for top ten is: (", average_red,
-        #       ", ", average_green, ", ", average_blue, ")")
+        print("Average RGB for top ten is: (", average_red,
+              ", ", average_green, ", ", average_blue, ")")
+
+    def twenty_most_common(self):
+        self.count()
+        self.number_counter = Counter(self.manual_count).most_common(20)
+        for rgb, value in self.number_counter:
+            print(rgb, value, ((float(value)/self.total_pixels)*100))
 
     def detect(self):
+        self.twenty_most_common()
         self.percentage_of_first = (
             float(self.number_counter[0][1])/self.total_pixels)
         print(self.percentage_of_first)
         if self.percentage_of_first > 0.5:
-            # print("Background color is ", self.number_counter[0][0])
+            print("Background color is ", self.number_counter[0][0])
             return self.number_counter[0][0]
         else:
             return (0,0,0)
