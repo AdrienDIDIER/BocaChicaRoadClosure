@@ -168,6 +168,7 @@ def img_to_text(url):
     if closest_name == 'firebrick':
         text = str(((pytesseract.image_to_string(Image.open(url)))))
         textEN = text.replace("-\n", "")
+        textEN = re.sub(r'[^A-Za-z0-9 ]+', '', textEN) 
         textFR = translator.translate(textEN, src="en", dest="fr")
         os.remove(url)
         return "🇺🇸 " + textEN + "🇫🇷 " + textFR.text
@@ -196,4 +197,4 @@ def getScreenNSF(url):
     if ret==None:
         return None
     else:
-        return "Infos NSF : \n" + re.sub(r'[^A-Za-z0-9 ]+', '', ret)
+        return "Infos NSF : \n" + ret
