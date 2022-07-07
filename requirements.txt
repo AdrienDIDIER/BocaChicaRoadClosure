@@ -72,5 +72,6 @@ traits==6.3.2
 tweepy==4.10.0
 urllib3==1.26.9
 uvicorn==0.18.1
+webcolors==1.12
 yarg==0.1.9
 youtube-dl==2021.12.17

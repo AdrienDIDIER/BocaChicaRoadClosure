@@ -1,3 +1,5 @@
+from cgitb import text
+
 import pandas as pd
 import requests
 import urllib.request
@@ -8,7 +10,9 @@ import numpy as np
 import dateutil.parser
 import cv2
 import youtube_dl
+import webcolors
 
+from color_detector import BackgroundColorDetector
 from googletrans import Translator
 from datetime import datetime
 from tempfile import TemporaryDirectory
@@ -16,6 +20,24 @@ from bs4 import BeautifulSoup
 from PIL import Image
 from dotenv import load_dotenv
 load_dotenv()
+
+def closest_colour(requested_colour):
+    min_colours = {}
+    for key, name in webcolors.CSS3_HEX_TO_NAMES.items():
+        r_c, g_c, b_c = webcolors.hex_to_rgb(key)
+        rd = (r_c - requested_colour[0]) ** 2
+        gd = (g_c - requested_colour[1]) ** 2
+        bd = (b_c - requested_colour[2]) ** 2
+        min_colours[(rd + gd + bd)] = name
+    return min_colours[min(min_colours.keys())]
+
+def get_colour_name(requested_colour):
+    try:
+        closest_name = actual_name = webcolors.rgb_to_name(requested_colour)
+    except ValueError:
+        closest_name = closest_colour(requested_colour)
+        actual_name = None
+    return actual_name, closest_name
 
 def get_data_table(url):
     df = pd.read_html(url)[0]
@@ -139,11 +161,18 @@ def img_to_text(url):
     #     os.getenv('TESSERACT_URL')
     # )
 
-    text = str(((pytesseract.image_to_string(Image.open(url)))))
-    textEN = text.replace("-\n", "")
-    textFR = translator.translate(textEN, src="en", dest="fr")
-    os.remove(url)
-    return "🇺🇸 " + textEN + "🇫🇷 " + textFR.text
+    BackgroundColor = BackgroundColorDetector(url)
+    _, closest_name = get_colour_name(BackgroundColor.detect())
+    
+    if closest_name == 'firebrick':
+        text = str(((pytesseract.image_to_string(Image.open(url)))))
+        textEN = text.replace("-\n", "")
+        textFR = translator.translate(textEN, src="en", dest="fr")
+        os.remove(url)
+        return "🇺🇸 " + textEN + "🇫🇷 " + textFR.text
+    else:
+        os.remove(url)
+        return None
 
 def getScreenNSF(url):
     video_url = url
@@ -159,7 +188,10 @@ def getScreenNSF(url):
 
     cap = cv2.VideoCapture(url)
     _, frame = cap.read()
-    crop_frame = frame[990:1080, 240:99999]
+    crop_frame = frame[995:1080, 240:99999]
     cv2.imwrite(os.getenv("TMP_URL") + f"NSF.png", crop_frame)
 
     return "Infos NSF : \n" + img_to_text(os.getenv("TMP_URL") + f"NSF.png")
+
+textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
+print(textNSF)

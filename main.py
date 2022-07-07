@@ -34,6 +34,7 @@ if len(df_to_tweet) > 0:
     
 check_OP_Mary(api, db, "BocaChicaGal", 1)
 textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
-check_NSF(api, db, textNSF)
+if textNSF is not None:
+    check_NSF(api, db, textNSF)
 
 print("Stop Execution")
