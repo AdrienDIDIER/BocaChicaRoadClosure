@@ -11,6 +11,7 @@ import dateutil.parser
 import cv2
 import youtube_dl
 import webcolors
+import re
 
 from color_detector import BackgroundColorDetector
 from googletrans import Translator
@@ -195,4 +196,4 @@ def getScreenNSF(url):
     if ret==None:
         return None
     else:
-        return "Infos NSF : \n" + ret
+        return "Infos NSF : \n" + re.sub(r'[^A-Za-z0-9 ]+', '', ret)
