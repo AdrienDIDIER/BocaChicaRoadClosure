@@ -60,6 +60,7 @@ simplejson==3.17.6
 six==1.16.0
 sniffio==1.2.0
 soupsieve==2.3.2.post1
+schedule==1.1.0
 starlette==0.20.3
 tika==1.24
 tools==0.1.9
