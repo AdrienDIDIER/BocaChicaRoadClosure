@@ -129,7 +129,7 @@ def tweet_road_closure(api, df):
         )
     for n in range(len(message)):
         try:
-            reponse = api.update_status(message[n])
+            reponse = api.update_status(message[n])._json
             tweet_id = reponse['id']
             api.update_status(status = message_fr[n], in_reply_to_status_id = tweet_id , auto_populate_reply_metadata=True)
         except Exception as e:
