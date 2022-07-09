@@ -129,15 +129,11 @@ def tweet_road_closure(api, df):
         )
     for n in range(len(message)):
         try:
-            api.update_status(message[n])
+            reponse = api.update_status(message[n])
+            tweet_id = reponse['id']
+            api.update_status(status = message_fr[n], in_reply_to_status_id = tweet_id , auto_populate_reply_metadata=True)
         except Exception as e:
-            print(e)
-        
-        try:
-            api.update_status(message_fr[n])
-        except Exception as e:
-            print(e)
-        
+            print(e)     
     return
 
 def check_OP_Mary(api, db_client, account_name, nb_tweets):
