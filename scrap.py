@@ -49,15 +49,14 @@ def get_data_table(url):
     df["DateTime"] = df["DateTime"].str.replace("pm", "PM", regex=False)
 
     df[['DateTime_Start','DateTime_Stop']] = df["DateTime"].str.split("to",expand=True,)
-    
+    del df["DateTime"]
+
     df["DateTime_Start"] = df["Date"] + " " + df["DateTime_Start"]
 
-    df["DateTime_Stop"] = np.where(df["DateTime_Stop"].str.contains('–'), df["DateTime_Stop"].str.replace('–', str(datetime.now().year)), df["Date"] + " " + df["DateTime_Stop"])
+    df["DateTime_Stop"] = np.where(df["DateTime_Stop"].str.contains(','), df["DateTime_Stop"].str.replace(',', ''), df["Date"] + " " + df["DateTime_Stop"])
 
     df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start']) #.dt.tz_localize('America/Chicago')
     df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop']) #.dt.tz_localize('America/Chicago')
-
-    del df["DateTime"]
 
     df["Date"] = pd.to_datetime(df['Date'], format="%A, %B %d, %Y")
 
