@@ -33,7 +33,9 @@ try:
     if len(df_to_tweet) > 0:
         print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
         tweet_road_closure(api, df_to_tweet)
-        
+    else:
+        print("No Tweet RC")
+
     check_OP_Mary(api, db, "BocaChicaGal", 1)
     textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
     if textNSF is not None:
