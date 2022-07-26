@@ -17,7 +17,7 @@ try:
     dates_list = get_rc_to_check(db)
 
     # GET INFOS ABOUT FLIGHT DURING ROAD closure
-    df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
+    # df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
     # flight_update(db, df_flight)
     # # ---- DELETE PDF FILES
     # delete_download_file(".pdf")
