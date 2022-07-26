@@ -85,9 +85,9 @@ def delete_download_file(filename_type):
 def pdf_to_text(filename):
 
     file =  os.getenv('TMP_URL') + filename + ".pdf"
-    # pytesseract.pytesseract.tesseract_cmd = (
-    #     os.getenv('TESSERACT_URL')
-    # )
+    pytesseract.pytesseract.tesseract_cmd = (
+        os.getenv('TESSERACT_URL')
+    )
 
     with TemporaryDirectory() as tempdir:
 
@@ -101,7 +101,6 @@ def pdf_to_text(filename):
         # Recognize the text as string in image using pytesserct
         text = str(((pytesseract.image_to_string(Image.open(f"{tempdir}\{filename}.png")))))
         text = text.replace("-\n", "").lower()
-    
     return text
 
 def get_infos_flight(url, dates_list):
@@ -139,19 +138,21 @@ def get_infos_flight(url, dates_list):
                 continue
 
             # print("Dowloading data for date : " + date)
-
-            date = soup_page.find("h1").text.split(";")[1]
-            pdf_link = soup_page.find('article').find(class_="gem-button-container").find("a").get('href')
-            download_file(pdf_link, date)
-            text = pdf_to_text(date)
-            if "non-flight testing" in text:
-                df.loc[len(df.index)] = [date, 0]
-            elif " flight testing" in text:
-                df.loc[len(df.index)] = [date, 1]
-            else:
-                df.loc[len(df.index)] = [date, 0]
+            if (soup_page.find("h1").text is not None):
+                date = soup_page.find("h1").text.split(";")[1]
+                pdf_link = soup_page.find('article').find(class_="gem-button-container").find("a").get('href')
+                download_file(pdf_link, date)
+                text = pdf_to_text(date)
+                if "non-flight testing" in text:
+                    print('tete')
+                    df.loc[len(df.index)] = [date, 0]
+                elif " flight testing" in text:
+                    df.loc[len(df.index)] = [date, 0]
+                else:
+                    df.loc[len(df.index)] = [date, 0]
     df['Date'] = df['Date'].str.replace('Original', '')
     df['Date'] = pd.to_datetime(df['Date'])
+    print(df)
     return df
 
 def img_to_text(url):
