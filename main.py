@@ -18,9 +18,9 @@ try:
 
     # GET INFOS ABOUT FLIGHT DURING ROAD closure
     df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
-    flight_update(db, df_flight)
-    # ---- DELETE PDF FILES
-    delete_download_file(".pdf")
+    # flight_update(db, df_flight)
+    # # ---- DELETE PDF FILES
+    # delete_download_file(".pdf")
 
     # GET DATA OF NEW AND UPDATED ROAD closure
     df_created = get_rc_with_id(db, row_added, True)
