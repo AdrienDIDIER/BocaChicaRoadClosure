@@ -126,8 +126,8 @@ def get_infos_flight(url, dates_list):
 
         soup_page = BeautifulSoup(content_page, 'html.parser')
 
-        if ("Order Closing" or "Temporary And Intermittent Road Delay") in soup_page.find("h1").text:
-            if (soup_page.find("h1") is not None):
+        if soup_page.find("h1") is not None:
+            if ("Order Closing" or "Temporary And Intermittent Road Delay") in soup_page.find("h1").text:
                 date = soup_page.find("h1").text.split(";")[1]
                 
                 if "Original" in date:
@@ -139,7 +139,7 @@ def get_infos_flight(url, dates_list):
                     continue
 
                 # print("Dowloading data for date : " + date)
-            
+                
                 date = soup_page.find("h1").text.split(";")[1]
                 pdf_link = soup_page.find('article').find(class_="gem-button-container").find("a").get('href')
                 download_file(pdf_link, date)
