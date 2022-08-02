@@ -85,9 +85,9 @@ def delete_download_file(filename_type):
 def pdf_to_text(filename):
 
     file =  os.getenv('TMP_URL') + filename + ".pdf"
-    pytesseract.pytesseract.tesseract_cmd = (
-        os.getenv('TESSERACT_URL')
-    )
+    # pytesseract.pytesseract.tesseract_cmd = (
+    #     os.getenv('TESSERACT_URL')
+    # )
 
     with TemporaryDirectory() as tempdir:
 
