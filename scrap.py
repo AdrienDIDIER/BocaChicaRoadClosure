@@ -142,11 +142,10 @@ def get_infos_flight(url, dates_list):
                     print("Dowloading data for date : " + date)
                     
                     date = soup_page.find("h1").text.split(";")[1]
-                    print(date)
                     pdf_link = soup_page.find('article').find(class_="gem-button-container").find("a").get('href')
-                    print(pdf_link)
                     download_file(pdf_link, date)
                     text = pdf_to_text(date)
+                    print(text)
                     if "non-flight testing" in text:
                         df.loc[len(df.index)] = [date, 0]
                     elif " flight testing" in text:
