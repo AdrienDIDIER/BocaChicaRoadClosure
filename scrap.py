@@ -190,11 +190,10 @@ def getScreenNSF(url):
 
     cap = cv2.VideoCapture(url)
     _, frame = cap.read()
-    crop_frame = frame[995:1080, 240:99999]
+    crop_frame = frame[995:1080, 245:99999]
     cv2.imwrite(os.getenv("TMP_URL") + f"NSF.png", crop_frame)
-
     ret = img_to_text(os.getenv("TMP_URL") + f"NSF.png")
-    if ret==None:
+    if ret==None or '@NASASpaceflight' in ret:
         return None
     else:
         return "Infos NSF : \n" + ret

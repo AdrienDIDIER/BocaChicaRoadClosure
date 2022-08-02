@@ -36,7 +36,7 @@ try:
     else:
         print("No Tweet RC")
 
-    check_OP_Mary(api, db, "BocaChicaGal", 1)
+    # check_OP_Mary(api, db, "BocaChicaGal", 1)
     textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
     if textNSF is not None:
         check_NSF(api, db, textNSF)
