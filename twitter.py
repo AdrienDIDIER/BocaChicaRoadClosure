@@ -77,61 +77,9 @@ def tweet_road_closure(api, df):
     df["DateTime_Start"] = df["DateTime_Start"].dt.tz_convert(tz='Europe/Paris')
     df["DateTime_Stop"] = df["DateTime_Stop"].dt.tz_convert(tz='Europe/Paris')
 
-    for index, row in df.iterrows():
-        locale.setlocale(locale.LC_TIME,'fr_FR.UTF-8')
-        # STATUS
-        if "Canceled" in row["Status"]:
-            row["Status"] = "Fermeture des routes annulées"
-        elif "Scheduled" in row["Status"]:
-            row["Status"] = "Fermeture des routes programmées"
-        elif "Possible" in row["Status"]:
-            row["Status"] = "Fermeture des routes possible"
-        
-        # DATETIME
-        if row["Date"].strftime("%d") != row["DateTime_Stop"].strftime("%d"):
-            row["DateTime_Stop"] = row["DateTime_Stop"].strftime("%A, %d %B, %Y - %H:%M")
-        else:
-            row["DateTime_Stop"] = row["DateTime_Stop"].strftime("%H:%M")
-
-        # TYPE
-        if row["created"] is True:
-            row["created"] = "🇫🇷 Nouvelle Fermeture: \n"
-        else:
-            row["created"] = "🇫🇷 Modification de Fermeture: \n"
-
-        # FLIGHT
-        if row["Flight"] == 0:
-            row["Flight"] = "❌ NB : Ceci n'est pas une fermeture pour vol"
-        elif row["Flight"] == 1:
-            row["Flight"] = "✅ NB : Ceci peut être une fermeture pour vol"
-        else:
-            row["Flight"] = ""
-        
-        # TYPE
-        if row["Type"] == 'Primary Date':
-            row["Type"] = "🚧 Fermeture principale"
-        elif row["Type"] == 'Alternative Date':
-            row["Type"] = "🚧 Fermeture secondaire"
-
-        message_fr.append(
-            row["created"]+
-            row["Type"] +
-            ": " +
-            row["Status"] +
-            " pour le " +
-            row["Date"].strftime("%A, %d %B, %Y") +
-            " de "+
-            row["DateTime_Start"].strftime("%H:%M") +
-            " à "+
-            row["DateTime_Stop"] +
-            " Heure de Paris \n"+
-            row["Flight"]
-        )
     for n in range(len(message)):
         try:
-            reponse = api.update_status(message[n])._json
-            tweet_id = reponse['id']
-            api.update_status(status = message_fr[n], in_reply_to_status_id = tweet_id , auto_populate_reply_metadata=True)
+            api.update_status(message[n])
         except Exception as e:
             print(e)     
     return
@@ -151,7 +99,7 @@ def check_OP_Mary(api, db_client, account_name, nb_tweets):
                 print('Tweet Mary')
                 set_last_tweet(db_client, row['id'], "MONGO_DB_URL_TABLE_RC")
                 try:
-                    api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥\n" + "🚀🔥Alerte recu pour un potentiel static fire d'un Ship ou d'un Booster🚀🔥")
+                    api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥")
                 except Exception as e:
                     print(e)
             else:

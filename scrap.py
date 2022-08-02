@@ -169,8 +169,6 @@ def img_to_text(url):
     if closest_name == 'firebrick':
         text = str(((pytesseract.image_to_string(Image.open(url)))))
         textEN = text.replace("-\n", "")
-        textEN = re.sub(r'[^A-Za-z0-9 ]+', '', textEN) 
-        textFR = translator.translate(textEN, src="en", dest="fr")
         os.remove(url)
         #  + "\n" + "🇫🇷 " + textFR.text
         return "🇺🇸 " + textEN
