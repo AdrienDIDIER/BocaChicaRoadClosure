@@ -158,7 +158,6 @@ def get_infos_flight(url, dates_list):
     return df
 
 def img_to_text(url):
-    translator = Translator()
 
     # pytesseract.pytesseract.tesseract_cmd = (
     #     os.getenv('TESSERACT_URL')
