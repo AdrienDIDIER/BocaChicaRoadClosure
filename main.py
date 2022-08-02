@@ -17,10 +17,10 @@ try:
     dates_list = get_rc_to_check(db)
 
     # GET INFOS ABOUT FLIGHT DURING ROAD closure
-    # df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
-    # flight_update(db, df_flight)
-    # # ---- DELETE PDF FILES
-    # delete_download_file(".pdf")
+    df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
+    flight_update(db, df_flight)
+    # ---- DELETE PDF FILES
+    delete_download_file(".pdf")
 
     # GET DATA OF NEW AND UPDATED ROAD closure
     df_created = get_rc_with_id(db, row_added, True)
@@ -32,11 +32,12 @@ try:
 
     if len(df_to_tweet) > 0:
         print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
-        tweet_road_closure(api, df_to_tweet)
+        exit()
+        #tweet_road_closure(api, df_to_tweet)
     else:
         print("No Tweet RC")
 
-    # check_OP_Mary(api, db, "BocaChicaGal", 1)
+    check_OP_Mary(api, db, "BocaChicaGal", 1)
     textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
     if textNSF is not None:
         check_NSF(api, db, textNSF)
