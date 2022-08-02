@@ -103,8 +103,8 @@ def check_OP_Mary(api, db_client, account_name, nb_tweets):
                     api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥")
                 except Exception as e:
                     print(e)
-            else:
-                print('No Tweet Mary')
+        else:
+            print('No Tweet Mary')
     return
 
 def check_NSF(api, db_client, text):
