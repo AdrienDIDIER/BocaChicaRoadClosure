@@ -174,12 +174,15 @@ def img_to_text(url):
         return None
 
 def getScreenNSF(url):
+    print("ok")
     stream = CamGear(source=url, stream_mode = True, logging=False).start() # YouTube Video URL as input
     frame = stream.read()
     crop_frame = frame[995:1080, 245:99999]
+    print("ok")
     cv2.imwrite(os.getenv("TMP_URL") + f"NSF.png", crop_frame)
-
+    print("ok")
     ret = img_to_text(os.getenv("TMP_URL") + f"NSF.png")
+    print("ok")
     if ret==None or '@NASASpaceflight' in ret:
         return None
     else:
