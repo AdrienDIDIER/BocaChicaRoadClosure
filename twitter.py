@@ -2,6 +2,7 @@ import tweepy
 import os
 import locale
 import pandas as pd
+import re
 
 from db import *
 from dotenv import load_dotenv
@@ -109,12 +110,12 @@ def check_OP_Mary(api, db_client, account_name, nb_tweets):
 
 def check_NSF(api, db_client, text):
 
-    if not get_last_tweet(db_client, text, "MONGO_DB_URL_TABLE_PT"):
+    if not get_last_tweet(db_client, re.sub(r'[^\w\s]', '', text).lower(), "MONGO_DB_URL_TABLE_PT"):
         print('Tweet NSF')
         try:
             api.update_status(text)
         except Exception as e:
             print(e)
-        set_last_tweet(db_client, text, "MONGO_DB_URL_TABLE_PT")
+        set_last_tweet(db_client, re.sub(r'[^\w\s]', '', text).lower(), "MONGO_DB_URL_TABLE_PT")
     else:
         print('No Tweet NSF')
