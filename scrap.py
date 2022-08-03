@@ -178,7 +178,7 @@ def img_to_text(url):
 
 def getScreenNSF(url):
     video_url = url
-    ydl_opts = {'quiet':'True', 'proxy':'socks5://127.0.0.1:1080/'}
+    ydl_opts = {'quiet':'True', 'proxy':'127.0.0.1:1234/'}
     ydl = youtube_dl.YoutubeDL(ydl_opts)
     info_dict = ydl.extract_info(video_url, download=False)
     formats = info_dict.get('formats', None)
