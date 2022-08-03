@@ -32,9 +32,11 @@ def closest_colour(requested_colour):
 def get_colour_name(requested_colour):
     try:
         closest_name, actual_name = webcolors.rgb_to_name(requested_colour)
+        print(closest_name, actual_name)
     except ValueError:
         closest_name = closest_colour(requested_colour)
         actual_name = None
+        print(closest_name, actual_name)
     return actual_name, closest_name
 
 def get_data_table(url):
