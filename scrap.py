@@ -186,7 +186,7 @@ def getScreenNSF(url):
     for f in formats:
         if f.get('format', None) == '96 - 1920x1080':
             url = f.get('url', None)
-            getScreenNSF(url)
+            break
 
     cap = cv2.VideoCapture(url)
     _, frame = cap.read()
@@ -197,3 +197,5 @@ def getScreenNSF(url):
         return None
     else:
         return "Infos NSF : \n" + ret
+
+getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
