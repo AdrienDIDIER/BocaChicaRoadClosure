@@ -159,7 +159,7 @@ def img_to_text(url):
     # pytesseract.pytesseract.tesseract_cmd = (
     #     os.getenv('TESSERACT_URL')
     # )
-
+    print(url)
     BackgroundColor = BackgroundColorDetector(url)
     _, closest_name = get_colour_name(BackgroundColor.detect())
     print(closest_name)
