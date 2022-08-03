@@ -161,6 +161,7 @@ def img_to_text(url):
     # )
     print(url)
     BackgroundColor = BackgroundColorDetector(url)
+    print(BackgroundColor)
     _, closest_name = get_colour_name(BackgroundColor.detect())
     print(closest_name)
     print(url)
