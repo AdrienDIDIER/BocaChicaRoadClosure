@@ -31,7 +31,7 @@ def closest_colour(requested_colour):
 
 def get_colour_name(requested_colour):
     try:
-        closest_name = actual_name = webcolors.rgb_to_name(requested_colour)
+        closest_name, actual_name = webcolors.rgb_to_name(requested_colour)
     except ValueError:
         closest_name = closest_colour(requested_colour)
         actual_name = None
@@ -159,12 +159,9 @@ def img_to_text(url):
     # pytesseract.pytesseract.tesseract_cmd = (
     #     os.getenv('TESSERACT_URL')
     # )
-    print(url)
+
     BackgroundColor = BackgroundColorDetector(url)
-    print(BackgroundColor)
     _, closest_name = get_colour_name(BackgroundColor.detect())
-    print(closest_name)
-    print(url)
     if closest_name == 'firebrick':
         text = str(((pytesseract.image_to_string(Image.open(url)))))
         textEN = text.replace("-\n", "")
