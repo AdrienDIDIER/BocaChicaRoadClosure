@@ -162,27 +162,23 @@ def img_to_text(url):
 
     BackgroundColor = BackgroundColorDetector(url)
     _, closest_name = get_colour_name(BackgroundColor.detect())
-    
+    print(closest_name)
+    print(url)
     if closest_name == 'firebrick':
         text = str(((pytesseract.image_to_string(Image.open(url)))))
         textEN = text.replace("-\n", "")
         os.remove(url)
-        #  + "\n" + "🇫🇷 " + textFR.text
         return "🇺🇸 " + textEN
     else:
         os.remove(url)
         return None
 
 def getScreenNSF(url):
-    print("ok")
     stream = CamGear(source=url, stream_mode = True, logging=False).start() # YouTube Video URL as input
     frame = stream.read()
     crop_frame = frame[995:1080, 245:99999]
-    print("ok")
-    cv2.imwrite(os.getenv("TMP_URL") + f"NSF.png", crop_frame)
-    print("ok")
-    ret = img_to_text(os.getenv("TMP_URL") + f"NSF.png")
-    print("ok")
+    cv2.imwrite(os.getenv("TMP_URL") + "NSF.png", crop_frame)
+    ret = img_to_text(os.getenv("TMP_URL") + "NSF.png")
     if ret==None or '@NASASpaceflight' in ret:
         return None
     else:
