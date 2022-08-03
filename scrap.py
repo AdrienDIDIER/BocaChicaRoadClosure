@@ -165,6 +165,7 @@ def img_to_text(url):
 
     # BackgroundColor = BackgroundColorDetector(url)
     # _, closest_name = get_colour_name(BackgroundColor.detect())
+    closest_name='firebrick'
     if closest_name == 'firebrick':
         text = str(((pytesseract.image_to_string(Image.open(url)))))
         textEN = text.replace("-\n", "")
