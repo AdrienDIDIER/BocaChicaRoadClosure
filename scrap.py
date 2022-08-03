@@ -163,8 +163,8 @@ def img_to_text(url):
     #     os.getenv('TESSERACT_URL')
     # )
 
-    BackgroundColor = BackgroundColorDetector(url)
-    _, closest_name = get_colour_name(BackgroundColor.detect())
+    # BackgroundColor = BackgroundColorDetector(url)
+    # _, closest_name = get_colour_name(BackgroundColor.detect())
     if closest_name == 'firebrick':
         text = str(((pytesseract.image_to_string(Image.open(url)))))
         textEN = text.replace("-\n", "")
