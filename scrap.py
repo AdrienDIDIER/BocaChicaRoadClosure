@@ -197,5 +197,3 @@ def getScreenNSF(url):
         return None
     else:
         return "Infos NSF : \n" + ret
-
-getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
