@@ -31,13 +31,10 @@ def closest_colour(requested_colour):
 
 def get_colour_name(requested_colour):
     try:
-        print(requested_colour)
         closest_name, actual_name = webcolors.rgb_to_name(requested_colour)
-        print(closest_name, actual_name)
     except ValueError:
         closest_name = closest_colour(requested_colour)
         actual_name = None
-        print(closest_name, actual_name)
     return actual_name, closest_name
 
 def get_data_table(url):
@@ -163,9 +160,9 @@ def img_to_text(url):
     #     os.getenv('TESSERACT_URL')
     # )
 
-    # BackgroundColor = BackgroundColorDetector(url)
-    # _, closest_name = get_colour_name(BackgroundColor.detect())
-    closest_name='firebrick'
+    BackgroundColor = BackgroundColorDetector(url)
+    _, closest_name = get_colour_name(BackgroundColor.detect())
+
     if closest_name == 'firebrick':
         text = str(((pytesseract.image_to_string(Image.open(url)))))
         textEN = text.replace("-\n", "")

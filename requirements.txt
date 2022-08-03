@@ -43,7 +43,6 @@ pipreqs==0.4.11
 prov==2.0.0
 pydot==1.4.2
 pymongo==4.1.1
-PyMuPDF==1.20.0
 pyparsing==3.0.9
 PyPDF2==2.3.1
 pytesseract==0.3.9
