@@ -1,4 +1,3 @@
-from cgitb import text
 
 import pandas as pd
 import requests
@@ -9,12 +8,10 @@ import os
 import numpy as np
 import dateutil.parser
 import cv2
-import youtube_dl
 import webcolors
-import re
 
+from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
-from googletrans import Translator
 from datetime import datetime
 from tempfile import TemporaryDirectory
 from bs4 import BeautifulSoup
@@ -177,21 +174,11 @@ def img_to_text(url):
         return None
 
 def getScreenNSF(url):
-    video_url = url
-    ydl_opts = {'quiet':'True'}
-    ydl = youtube_dl.YoutubeDL(ydl_opts)
-    info_dict = ydl.extract_info(video_url, download=False)
-    formats = info_dict.get('formats', None)
-
-    for f in formats:
-        if f.get('format', None) == '96 - 1920x1080':
-            url = f.get('url', None)
-            break
-
-    cap = cv2.VideoCapture(url)
-    _, frame = cap.read()
+    stream = CamGear(source=url, stream_mode = True, logging=False).start() # YouTube Video URL as input
+    frame = stream.read()
     crop_frame = frame[995:1080, 245:99999]
     cv2.imwrite(os.getenv("TMP_URL") + f"NSF.png", crop_frame)
+
     ret = img_to_text(os.getenv("TMP_URL") + f"NSF.png")
     if ret==None or '@NASASpaceflight' in ret:
         return None
