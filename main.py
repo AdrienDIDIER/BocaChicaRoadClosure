@@ -32,8 +32,7 @@ try:
 
     if len(df_to_tweet) > 0:
         print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
-        exit()
-        #tweet_road_closure(api, df_to_tweet)
+        tweet_road_closure(api, df_to_tweet)
     else:
         print("No Tweet RC")
 

@@ -29,8 +29,8 @@ def tweet_road_closure(api, df):
     df["DateTime_Start"] = df["DateTime_Start"].dt.tz_localize(tz='America/Chicago')
     df["DateTime_Stop"] = df["DateTime_Stop"].dt.tz_localize(tz='America/Chicago')
 
-    df["DateTime_Start_EU"] = df["DateTime_Start"].dt.tz_localize(tz='Europe/Paris')
-    df["DateTime_Stop_EU"] = df["DateTime_Stop"].dt.tz_localize(tz='Europe/Paris')
+    df["DateTime_Start_EU"] = df["DateTime_Start"].dt.tz_convert(tz='Europe/Paris')
+    df["DateTime_Stop_EU"] = df["DateTime_Stop"].dt.tz_convert(tz='Europe/Paris')
 
     for _, row in df.iterrows():
         # STATUS
@@ -44,10 +44,10 @@ def tweet_road_closure(api, df):
         # DATETIME
         if row["Date"].strftime("%d") != row["DateTime_Stop"].strftime("%d"):
             row["DateTime_Stop"] = row["DateTime_Stop"].strftime("%A, %B %d, %Y - %I:%M %p")
-            row["DateTime_Stop_EU"] = row["DateTime_Stop_EU"].strftime("%A, %B %d, %Y - %I:%M %p")
+            row["DateTime_Stop_EU"] = row["DateTime_Stop_EU"].strftime("%A, %B %d, %Y - %H:%M %p")
         else:
             row["DateTime_Stop"] = row["DateTime_Stop"].strftime("%I:%M %p")
-            row["DateTime_Stop_EU"] = row["DateTime_Stop_EU"].strftime("%A, %B %d, %Y - %I:%M %p")
+            row["DateTime_Stop_EU"] = row["DateTime_Stop_EU"].strftime("%A, %B %d, %Y - %H:%M")
 
         # TYPE
         if row["created"] is True:
@@ -71,10 +71,10 @@ def tweet_road_closure(api, df):
             " for " +
             row["Date"].strftime("%A, %B %d, %Y") +
             " from "+
-            row["DateTime_Start"].strftime("%I:%M %p") + "(" + row["DateTime_Start_EU"].strftime("%I:%M %p") + " UTC+2)" +
+            row["DateTime_Start"].strftime("%I:%M %p") + " (" + row["DateTime_Start_EU"].strftime("%H:%M") + " UTC+2)" +
             " to "+
-            row["DateTime_Stop"] + "(" + row["DateTime_Stop_EU"]  + " UTC+2)" +
-            " Boca Chica Time \n"+
+            row["DateTime_Stop"] +
+            " Boca Chica Time " + " (" + row["DateTime_Stop_EU"]  + " UTC+2) \n" +
             row["Flight"]
         )
 
@@ -82,7 +82,7 @@ def tweet_road_closure(api, df):
         try:
             api.update_status(message[n])
         except Exception as e:
-            print(e)     
+            print(e)    
     return
 
 def check_OP_Mary(api, db_client, account_name, nb_tweets):
