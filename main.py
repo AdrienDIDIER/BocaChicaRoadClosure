@@ -1,9 +1,6 @@
-from gettext import textdomain
 from db import *
 from scrap import *
 from twitter import *
-import schedule
-import time
 
 print("Start Execution")
 

@@ -8,7 +8,6 @@ import numpy as np
 import dateutil.parser
 import cv2
 import webcolors
-import sys
 import PyPDF2
 from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
@@ -17,7 +16,6 @@ from tempfile import TemporaryDirectory
 from bs4 import BeautifulSoup
 from PIL import Image
 from dotenv import load_dotenv
-from db import get_last_msib, set_last_msib
 load_dotenv()
 
 def closest_colour(requested_colour):
