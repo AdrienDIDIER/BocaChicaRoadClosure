@@ -138,4 +138,5 @@ def check_MSIB(api, db_client, text, path):
             print(e)
         set_last_msib(db_client, check_date, "MONGO_DB_URL_TABLE_MSIB")
     else:
+        os.remove(os.getenv('TMP_URL') + "msib.pdf")
         print('No Tweet MSIB')
