@@ -84,10 +84,10 @@ def pdf_to_img_to_text(filename):
 
     file =  os.getenv('TMP_URL') + filename + ".pdf"
     
-    if sys.platform.startswith('win'):
-        pytesseract.pytesseract.tesseract_cmd = (
-            os.getenv('TESSERACT_URL')
-        )
+    # if sys.platform.startswith('win'):
+    #     pytesseract.pytesseract.tesseract_cmd = (
+    #         os.getenv('TESSERACT_URL')
+    #     )
 
     with TemporaryDirectory() as tempdir:
 
