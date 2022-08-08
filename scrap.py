@@ -30,7 +30,9 @@ def closest_colour(requested_colour):
 
 def get_colour_name(requested_colour):
     try:
+        print("1")
         closest_name, actual_name = webcolors.rgb_to_name(requested_colour)
+        print("2")
     except Exception as e:
         print(e)
         closest_name = closest_colour(requested_colour)
