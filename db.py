@@ -78,3 +78,15 @@ def get_last_tweet(client, id, table):
     if res is not None:
         return True
     return False
+
+def set_last_msib(client, id, table):
+    client[os.getenv(table)].replace_one(
+        {"last_issue_date":id}, {"last_issue_date":id}, upsert=True
+    )
+    return 
+
+def get_last_msib(client, id, table):
+    res = client[os.getenv(table)].find_one({"last_issue_date": id})
+    if res is not None:
+        return True
+    return False

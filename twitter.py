@@ -3,9 +3,12 @@ import os
 import locale
 import pandas as pd
 import re
+import fitz
 
 from db import *
 from dotenv import load_dotenv
+
+from scrap import delete_download_file
 
 load_dotenv()
 
@@ -119,3 +122,23 @@ def check_NSF(api, db_client, text):
         set_last_tweet(db_client, re.sub(r'[^\w\s]', '', text).lower(), "MONGO_DB_URL_TABLE_PT")
     else:
         print('No Tweet NSF')
+
+def check_MSIB(api, db_client, text, path):
+    check_date = re.sub(r'[^\w\s]', '', text.split('issue date:')[1].split('‘spacex')[0]).lower().replace(" ",'').replace('\n', ' ').replace('\r', '')
+    to_tweet = 'New MSIB from ' + (text.split('10 p.m.')[1].split('each day,')[0]).replace('\n', ' ').replace('\r', '').replace('through', 'to')
+    if not get_last_msib(db_client, check_date, "MONGO_DB_URL_TABLE_MSIB"):
+        print('Tweet MSIB')
+        try:
+            pdffile = os.getenv('TMP_URL') + path + ".pdf"
+            doc = fitz.open(pdffile)
+            page = doc.load_page(0)
+            pix = page.get_pixmap()
+            pix.save(os.getenv('TMP_URL') + "msib.png")
+            api.update_status_with_media(filename = os.getenv('TMP_URL') + "msib.png", status  = to_tweet)
+            os.remove(os.getenv('TMP_URL') + "msib.pdf")
+            os.remove(os.getenv('TMP_URL') + "msib.png")
+        except Exception as e:
+            print(e)
+        set_last_msib(db_client, check_date, "MONGO_DB_URL_TABLE_MSIB")
+    else:
+        print('No Tweet MSIB')

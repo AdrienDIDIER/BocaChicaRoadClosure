@@ -40,6 +40,11 @@ try:
     textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
     if textNSF is not None:
         check_NSF(api, db, textNSF)
+    
+    textMSIB, path = getMSIB()
+    if textMSIB is not None:
+        check_MSIB(api, db, textMSIB, path)
+
 except Exception as e:
     print(e)
 

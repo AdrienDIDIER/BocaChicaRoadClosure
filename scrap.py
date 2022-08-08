@@ -1,4 +1,3 @@
-
 import pandas as pd
 import requests
 import urllib.request
@@ -9,7 +8,8 @@ import numpy as np
 import dateutil.parser
 import cv2
 import webcolors
-
+import sys
+import PyPDF2
 from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
 from datetime import datetime
@@ -17,6 +17,7 @@ from tempfile import TemporaryDirectory
 from bs4 import BeautifulSoup
 from PIL import Image
 from dotenv import load_dotenv
+from db import get_last_msib, set_last_msib
 load_dotenv()
 
 def closest_colour(requested_colour):
@@ -79,12 +80,14 @@ def delete_download_file(filename_type):
             os.remove(os.path.join(dir_name, file))
     return
 
-def pdf_to_text(filename):
+def pdf_to_img_to_text(filename):
 
     file =  os.getenv('TMP_URL') + filename + ".pdf"
-    # pytesseract.pytesseract.tesseract_cmd = (
-    #     os.getenv('TESSERACT_URL')
-    # )
+    
+    if sys.platform.startswith('win'):
+        pytesseract.pytesseract.tesseract_cmd = (
+            os.getenv('TESSERACT_URL')
+        )
 
     with TemporaryDirectory() as tempdir:
 
@@ -98,6 +101,23 @@ def pdf_to_text(filename):
         # Recognize the text as string in image using pytesserct
         text = str(((pytesseract.image_to_string(Image.open(f"{tempdir}\{filename}.png")))))
         text = text.replace("-\n", "").lower()
+    return text
+
+def pdf_to_text(filename):
+
+    file =  os.getenv('TMP_URL') + filename + ".pdf"
+    #create file object variable
+    #opening method will be rb
+    pdffileobj=open(file,'rb')
+    #create reader variable that will read the pdffileobj
+    pdfreader=PyPDF2.PdfFileReader(pdffileobj)
+    #This will store the number of pages of this pdf file
+    x=pdfreader.numPages 
+    #create a variable that will select the selected number of pages
+    pageobj=pdfreader.getPage(x+1)  
+    #(x+1) because python indentation starts with 0.
+    #create text variable which will store all text datafrom pdf file
+    text=pageobj.extractText()
     return text
 
 def get_infos_flight(url, dates_list):
@@ -141,7 +161,7 @@ def get_infos_flight(url, dates_list):
                     date = soup_page.find("h1").text.split(";")[1]
                     pdf_link = soup_page.find('article').find(class_="gem-button-container").find("a").get('href')
                     download_file(pdf_link, date)
-                    text = pdf_to_text(date)
+                    text = pdf_to_img_to_text(date)
                     if "non-flight testing" in text:
                         df.loc[len(df.index)] = [date, 0]
                     elif " flight testing" in text:
@@ -182,3 +202,16 @@ def getScreenNSF(url):
         return None
     else:
         return "Infos NSF : \n" + ret
+
+def getMSIB():
+    url = "http://msib.bocachica.com/"
+    response = requests.get(url)
+    if response.status_code != 200:
+        print("Error fetching page home")
+    else:
+        content = response.content
+    soup_page = BeautifulSoup(content, 'html.parser')
+    url_msib = soup_page.find("frame")['src']
+    download_file(url_msib, 'msib')
+    text = pdf_to_img_to_text('msib')
+    return text, 'msib'
