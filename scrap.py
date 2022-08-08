@@ -182,7 +182,7 @@ def img_to_text(url):
 
     BackgroundColor = BackgroundColorDetector(url)
     _, closest_name = get_colour_name(BackgroundColor.detect())
-
+    print(closest_name)
     if closest_name == 'firebrick':
         text = str(((pytesseract.image_to_string(Image.open(url)))))
         textEN = text.replace("-\n", "")
@@ -197,6 +197,7 @@ def getScreenNSF(url):
     frame = stream.read()
     crop_frame = frame[995:1080, 245:99999]
     cv2.imwrite(os.getenv("TMP_URL") + "NSF.png", crop_frame)
+    print("la")
     ret = img_to_text(os.getenv("TMP_URL") + "NSF.png")
     if ret==None or '@NASASpaceflight' in ret:
         return None
