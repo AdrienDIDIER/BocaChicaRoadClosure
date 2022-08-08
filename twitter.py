@@ -1,14 +1,11 @@
 import tweepy
 import os
-import locale
 import pandas as pd
 import re
 import fitz
 
 from db import *
 from dotenv import load_dotenv
-
-from scrap import delete_download_file
 
 load_dotenv()
 
