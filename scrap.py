@@ -179,7 +179,9 @@ def img_to_text(url):
     #     os.getenv('TESSERACT_URL')
     # )
 
+    print(1)
     BackgroundColor = BackgroundColorDetector(url)
+    print(2)
     _, closest_name = get_colour_name(BackgroundColor.detect())
     print(closest_name)
     if closest_name == 'firebrick':
