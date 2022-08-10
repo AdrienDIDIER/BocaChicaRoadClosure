@@ -22,6 +22,7 @@ def process():
 
         # GET INFOS ABOUT FLIGHT DURING ROAD closure
         df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
+        print(df_flight)
         flight_update(db, df_flight)
 
         # GET DATA OF NEW AND UPDATED ROAD closure

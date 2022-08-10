@@ -73,7 +73,6 @@ def pdf_to_img_to_text(file):
     # Recognize the text as string in image using pytesserct
     text = str(((pytesseract.image_to_string(stream))))
     text = text.replace("-\n", "").lower()
-    print(text)
     return text
 
 def get_infos_flight(url, dates_list):
