@@ -2,6 +2,8 @@ from db import *
 from scrap import *
 from twitter import *
 import dotenv
+import warnings
+warnings.filterwarnings("ignore")
 
 dotenv.load_dotenv()
 
