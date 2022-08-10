@@ -2,3 +2,7 @@
 /.venv
 /__pycache__
 /tmp/*
+/.aws-sam
+env.json
+/.poppler-22.04.0
+/.tesseract_ocr

@@ -3,8 +3,6 @@ import os
 
 from datetime import datetime
 from pymongo import MongoClient
-from dotenv import load_dotenv
-load_dotenv()
 
 def get_database():
     # Provide the mongodb atlas url to connect python to mongodb using pymongo

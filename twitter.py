@@ -2,12 +2,9 @@ import tweepy
 import os
 import pandas as pd
 import re
-import fitz
-
+import pdf2image
+import io
 from db import *
-from dotenv import load_dotenv
-
-load_dotenv()
 
 def connect_api_twitter():
     # Authenticate to Twitter
@@ -96,7 +93,7 @@ def check_OP_Mary(api, db_client, account_name, nb_tweets):
     df_tweets.drop(["_api", "_json"],axis=1, inplace=True)
 
     for _, row in df_tweets.iterrows():
-        if (('alert') and ('static fire')) in row['text'].lower():
+        if 'alert' in row['text'].lower() and 'static fire' in row['text'].lower():
             if not get_last_tweet(db_client, row['id'], "MONGO_DB_URL_TABLE_RC"):
                 print('Tweet Mary')
                 set_last_tweet(db_client, row['id'], "MONGO_DB_URL_TABLE_RC")
@@ -104,6 +101,8 @@ def check_OP_Mary(api, db_client, account_name, nb_tweets):
                     api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥")
                 except Exception as e:
                     print(e)
+            else:
+                print('No Tweet Mary')
         else:
             print('No Tweet Mary')
     return
@@ -120,23 +119,24 @@ def check_NSF(api, db_client, text):
     else:
         print('No Tweet NSF')
 
-def check_MSIB(api, db_client, text, path):
-    check_date = re.sub(r'[^\w\s]', '', text.split('issue date:')[1].split('‘spacex')[0]).lower().strip().replace(" ",'').replace('\n', ' ').replace('\r', '')
-    to_tweet = 'New MSIB from ' + (text.split('10 p.m.')[1].split('each day,')[0]).replace('\n', ' ').replace('\r', '').replace('through', 'to')
+def check_MSIB(api, db_client, text, pdf_file):
+    check_date = re.sub(r'[^\w\s]', '', text.split('issue date:')[1].split('spacex')[0]).lower().strip().replace(" ",'').replace('\n', ' ').replace('\r', '')
+    to_tweet = 'New MSIB from ' + (text.split('10 pm.')[1].split('each day,')[0]).replace('\n', ' ').replace('\r', '').replace('through', 'to')
     if not get_last_msib(db_client, check_date, "MONGO_DB_URL_TABLE_MSIB"):
         print('Tweet MSIB')
         try:
-            pdffile = os.getenv('TMP_URL') + path + ".pdf"
-            doc = fitz.open(pdffile)
-            page = doc.load_page(0)
-            pix = page.get_pixmap()
-            pix.save(os.getenv('TMP_URL') + "msib.png")
-            api.update_status_with_media(filename = os.getenv('TMP_URL') + "msib.png", status  = to_tweet)
-            os.remove(os.getenv('TMP_URL') + "msib.pdf")
-            os.remove(os.getenv('TMP_URL') + "msib.png")
+            img = pdf2image.convert_from_bytes(pdf_file, fmt='jpeg', poppler_path='./.poppler-22.04.0/Library/bin')[0]
+            # Create a buffer to hold the bytes
+            buf = io.BytesIO()
+            # Save the image as jpeg to the buffer
+            img.save(buf, 'jpeg')
+            # Rewind the buffer's file pointer
+            buf.seek(0)
+            # Read the bytes from the buffer
+            image_bytes = buf.read()
+            api.update_status_with_media(filename = "", file = image_bytes, status = to_tweet)
         except Exception as e:
             print(e)
         set_last_msib(db_client, check_date, "MONGO_DB_URL_TABLE_MSIB")
     else:
-        os.remove(os.getenv('TMP_URL') + "msib.pdf")
         print('No Tweet MSIB')

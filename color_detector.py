@@ -5,7 +5,7 @@ from collections import Counter
 
 class BackgroundColorDetector():
     def __init__(self, imageLoc):
-        self.img = cv2.imread(imageLoc, 1)
+        self.img = imageLoc
         self.manual_count = {}
         self.w, self.h, self.channels = self.img.shape
         self.total_pixels = self.w*self.h
@@ -29,18 +29,10 @@ class BackgroundColorDetector():
             green += self.number_counter[top][0][1]
             blue += self.number_counter[top][0][2]
 
-        average_red = red / sample
-        average_green = green / sample
-        average_blue = blue / sample
-        # print("Average RGB for top ten is: (", average_red,
-        #       ", ", average_green, ", ", average_blue, ")")
 
     def twenty_most_common(self):
         self.count()
         self.number_counter = Counter(self.manual_count).most_common(20)
-        for rgb, value in self.number_counter:
-            # print(rgb, value, ((float(value)/self.total_pixels)*100))
-            pass
 
     def detect(self):
         self.twenty_most_common()
