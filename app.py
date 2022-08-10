@@ -4,7 +4,6 @@ from twitter import *
 import dotenv
 import warnings
 warnings.filterwarnings("ignore")
-
 dotenv.load_dotenv()
 
 def process():
@@ -69,6 +68,5 @@ def process():
 
     print("Stop Execution")
 
-process()
-# if __name__ == "__main__":
-#     process()
+if __name__ == "__main__":
+    process()
