@@ -1,14 +1,19 @@
 from db import *
 from scrap import *
 from twitter import *
+from datetime import datetime
 import dotenv
 import warnings
 warnings.filterwarnings("ignore")
 dotenv.load_dotenv()
 
+
+
 def process():
     print("Start Execution")
-    
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    print("Current Time =", current_time)
     # DATABASE
     db = get_database()
     api = connect_api_twitter()
