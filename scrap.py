@@ -17,8 +17,6 @@ from tempfile import TemporaryDirectory
 from bs4 import BeautifulSoup
 from PIL import Image
 
-pytesseract.pytesseract.tesseract_cmd = './.tesseract_ocr/tesseract.exe'
-
 def closest_colour(requested_colour):
     min_colours = {}
     for key, name in webcolors.CSS3_HEX_TO_NAMES.items():
@@ -71,7 +69,7 @@ def download_file(download_url):
 
 def pdf_to_img_to_text(file):
 
-    stream = pdf2image.convert_from_bytes(file,  poppler_path='./.poppler-22.04.0/Library/bin')[0]
+    stream = pdf2image.convert_from_bytes(file)[0]
     # Recognize the text as string in image using pytesserct
     text = str(((pytesseract.image_to_string(stream))))
     text = text.replace("-\n", "").lower()
