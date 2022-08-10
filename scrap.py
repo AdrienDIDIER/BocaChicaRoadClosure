@@ -68,7 +68,7 @@ def download_file(download_url):
     return response.content
 
 def pdf_to_img_to_text(file):
-
+    print(pdf2image.convert_from_bytes(file))
     stream = pdf2image.convert_from_bytes(file)[0]
     # Recognize the text as string in image using pytesserct
     text = str(((pytesseract.image_to_string(stream))))
