@@ -84,7 +84,7 @@ def get_infos_flight(url, dates_list):
 
     soup = BeautifulSoup(content, 'html.parser')
 
-    all_articles = soup.find_all('article')[1:5]
+    all_articles = soup.find_all('article')[1:3]
 
     df = pd.DataFrame(columns=['Date', 'Flight'])
 
