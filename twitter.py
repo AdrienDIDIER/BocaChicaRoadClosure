@@ -125,7 +125,7 @@ def check_MSIB(api, db_client, text, pdf_file):
     if not get_last_msib(db_client, check_date, "MONGO_DB_URL_TABLE_MSIB"):
         print('Tweet MSIB')
         try:
-            img = pdf2image.convert_from_bytes(pdf_file, fmt='jpeg', poppler_path='/usr/share/poppler')[0]
+            img = pdf2image.convert_from_bytes(pdf_file, fmt='jpeg')[0]
             # Create a buffer to hold the bytes
             buf = io.BytesIO()
             # Save the image as jpeg to the buffer
