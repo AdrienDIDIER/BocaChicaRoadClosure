@@ -120,9 +120,8 @@ def check_NSF(api, db_client, text):
         print('No Tweet NSF')
 
 def check_MSIB(api, db_client, text, pdf_file):
-    print(text)
     check_date = re.sub(r'[^\w\s]', '', text.split('issue date:')[1].split('spacex')[0]).lower().strip().replace(" ",'').replace('\n', ' ').replace('\r', '')
-    to_tweet = 'New MSIB from ' + (text.split('10 pm.')[1].split('each day,')[0]).replace('\n', ' ').replace('\r', '').replace('through', 'to')
+    to_tweet = 'New MSIB from ' + (text.split('10 p.m.')[1].split('each day,')[0]).replace('\n', ' ').replace('\r', '').replace('through', 'to')
     if not get_last_msib(db_client, check_date, "MONGO_DB_URL_TABLE_MSIB"):
         print('Tweet MSIB')
         try:

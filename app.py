@@ -16,13 +16,11 @@ def process():
     try:
         # GET ROAD closure
         df = get_data_table("https://www.cameroncountytx.gov/spacex/")
-        print(df)
         row_added, row_updated = insert_new_road_closure(db, df)
         dates_list = get_rc_to_check(db)
 
         # GET INFOS ABOUT FLIGHT DURING ROAD closure
         df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
-        print(df_flight)
         flight_update(db, df_flight)
 
         # GET DATA OF NEW AND UPDATED ROAD closure
@@ -32,6 +30,7 @@ def process():
         df_to_tweet = pd.concat([df_created, df_updated])
 
         if len(df_to_tweet) > 0:
+            print(df_to_tweet)
             print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
             tweet_road_closure(api, df_to_tweet)
         else:
