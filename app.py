@@ -1,5 +1,7 @@
 import dotenv
 import logging
+import pytz
+
 from db import *
 from scrap import *
 from twitter import *
@@ -12,7 +14,9 @@ dotenv.load_dotenv()
 def process():
     print("Start Execution")
     now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
+    timezone = pytz.timezone('UTC')
+    now_aware = timezone.localize(now)
+    current_time = now_aware.to("UTC+2").strftime("%H:%M:%S")
     print("Current Time =", current_time)
     # DATABASE
     db = get_database()
