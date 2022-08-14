@@ -13,10 +13,9 @@ dotenv.load_dotenv()
 
 def process():
     print("Start Execution")
-    now = datetime.now()
-    timezone = pytz.timezone('UTC')
-    now_aware = timezone.localize(now)
-    current_time = now_aware.astimezone("UTC+2").strftime("%H:%M:%S")
+    now = datetime.utcnow()
+    now_paris = now.astimezone(pytz.timezone("UTC+2"))
+    current_time = now_paris.strftime("%H:%M:%S")
     print("Current Time =", current_time)
     # DATABASE
     db = get_database()
