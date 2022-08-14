@@ -14,7 +14,7 @@ dotenv.load_dotenv()
 def process():
     print("Start Execution")
     now = datetime.utcnow()
-    now_paris = now.astimezone(pytz.timezone("UTC+2"))
+    now_paris = now.astimezone(pytz.timezone("Europe/Paris"))
     current_time = now_paris.strftime("%H:%M:%S")
     print("Current Time =", current_time)
     # DATABASE
