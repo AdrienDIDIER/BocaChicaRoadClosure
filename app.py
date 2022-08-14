@@ -16,7 +16,7 @@ def process():
     now = datetime.now()
     timezone = pytz.timezone('UTC')
     now_aware = timezone.localize(now)
-    current_time = now_aware.to("UTC+2").strftime("%H:%M:%S")
+    current_time = now_aware.astimezone("UTC+2").strftime("%H:%M:%S")
     print("Current Time =", current_time)
     # DATABASE
     db = get_database()
