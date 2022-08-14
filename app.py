@@ -9,7 +9,7 @@ from twitter import *
 from datetime import datetime
 
 warnings.filterwarnings('ignore')
-logging.getLogger().setLevel(logging.ERROR)
+# logging.getLogger().setLevel(logging.ERROR)
 
 dotenv.load_dotenv()
 
