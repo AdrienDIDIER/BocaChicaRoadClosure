@@ -1,12 +1,14 @@
 import dotenv
 import logging
 import pytz
+import warnings
 
 from db import *
 from scrap import *
 from twitter import *
 from datetime import datetime
 
+warnings.filterwarnings('ignore')
 logging.getLogger().setLevel(logging.ERROR)
 
 dotenv.load_dotenv()
