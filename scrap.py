@@ -1,21 +1,14 @@
 import pandas as pd
 import requests
-import urllib.request
 import pytesseract
-import os
 import numpy as np
 import dateutil.parser
-import cv2
 import webcolors
-import io
 import pdf2image
-import fitz
 from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
 from datetime import datetime
-from tempfile import TemporaryDirectory
 from bs4 import BeautifulSoup
-from PIL import Image
 
 def closest_colour(requested_colour):
     min_colours = {}
@@ -141,7 +134,7 @@ def img_to_text(crop_frame):
         return None
 
 def getScreenNSF(url):
-    stream = CamGear(source=url, stream_mode = True, logging=False).start() # YouTube Video URL as input
+    stream = CamGear(source=url, stream_mode = True).start() # YouTube Video URL as input
     frame = stream.read()
     crop_frame = frame[995:1080, 245:99999]
     ret = img_to_text(crop_frame)
