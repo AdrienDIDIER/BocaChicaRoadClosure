@@ -1,13 +1,12 @@
+import logging
+import dotenv
+logger = logging.getLogger('App')
+logger.setLevel(logging.ERROR)
+
 from db import *
 from scrap import *
 from twitter import *
 from datetime import datetime
-
-import dotenv
-import logging
-
-logger = logging.getLogger('App')
-logger.setLevel(logging.ERROR)
 
 dotenv.load_dotenv()
 
