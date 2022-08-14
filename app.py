@@ -1,11 +1,12 @@
 import dotenv
-import warnings
+import logging
 from db import *
 from scrap import *
 from twitter import *
 from datetime import datetime
 
-warnings.filterwarnings("ignore")
+logging.getLogger().setLevel(logging.ERROR)
+
 dotenv.load_dotenv()
 
 def process():
