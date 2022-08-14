@@ -4,12 +4,12 @@ from twitter import *
 from datetime import datetime
 
 import dotenv
-import warnings
+import logging
 
-warnings.filterwarnings("ignore")
+logger = logging.getLogger('App')
+logger.setLevel(logging.ERROR)
+
 dotenv.load_dotenv()
-
-
 
 def process():
     print("Start Execution")
