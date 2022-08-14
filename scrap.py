@@ -5,14 +5,12 @@ import numpy as np
 import dateutil.parser
 import webcolors
 import pdf2image
-from vidgear.gears import logger
+from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
 from datetime import datetime
 from bs4 import BeautifulSoup
 
-logger.setLevel('ERROR')
-
-from vidgear.gears import CamGear
+CamGear.logger.setLevel('ERROR')
 
 def closest_colour(requested_colour):
     min_colours = {}
