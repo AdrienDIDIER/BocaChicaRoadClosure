@@ -1,7 +1,7 @@
 import logging
 import dotenv
 logger = logging.getLogger('App')
-logger.setLevel(logging.ERROR)
+logger.setLevel("ERROR")
 
 from db import *
 from scrap import *
