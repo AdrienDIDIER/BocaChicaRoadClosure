@@ -1,13 +1,11 @@
-import logging
 import dotenv
-logger = logging.getLogger('App')
-logger.setLevel("ERROR")
-
+import warnings
 from db import *
 from scrap import *
 from twitter import *
 from datetime import datetime
 
+warnings.filterwarnings("ignore")
 dotenv.load_dotenv()
 
 def process():
