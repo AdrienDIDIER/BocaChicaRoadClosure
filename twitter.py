@@ -35,11 +35,11 @@ def tweet_road_closure(api, df):
     for _, row in df.iterrows():
         
         if row['created'] == True:
-            img = Image.open("./images/Road_new.png")
+            img = Image.open("/home/ubuntu/BocaChicaRoadClosure/images/Road_new.png")
         elif "Canceled" in row["Status"]:
-            img = Image.open("./images/Road_canceled.png")
+            img = Image.open("/home/ubuntu/BocaChicaRoadClosure/images/images/Road_canceled.png")
         else:
-            img = Image.open("./images/Road_update.png")
+            img = Image.open("/home/ubuntu/BocaChicaRoadClosure/images/images/Road_update.png")
         
         Date_start = row["DateTime_Start"].strftime("%A, %B %d, %Y - %I:%M %p")
         Date_end = row["DateTime_Stop"].strftime("%A, %B %d, %Y - %I:%M %p")
