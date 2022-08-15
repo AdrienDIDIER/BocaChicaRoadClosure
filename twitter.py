@@ -50,7 +50,7 @@ def tweet_road_closure(api, df):
         Date_start = row["DateTime_Start"].strftime("%A, %B %d, %Y - %I:%M %p")
         Date_end = row["DateTime_Stop"].strftime("%A, %B %d, %Y - %I:%M %p")
         Date_status = row["Status"]
-        title_font = ImageFont.truetype('fonts/dejavu-sans.book.ttf', 60)
+        title_font = ImageFont.truetype('/home/ubuntu/BocaChicaRoadClosure/fonts/dejavu-sans.book.ttf', 60)
         img_edit = ImageDraw.Draw(img)
         img_edit.text((273,97), str(Date_start), (0, 0, 0), font=title_font)
         img_edit.text((167,235), str(Date_end), (0, 0, 0), font=title_font)
