@@ -5,6 +5,7 @@ import re
 import pdf2image
 import io
 from db import *
+from PIL import Image, ImageFont, ImageDraw 
 
 def connect_api_twitter():
     # Authenticate to Twitter
@@ -23,6 +24,7 @@ def connect_api_twitter():
 def tweet_road_closure(api, df):
 
     message = []
+    image_to_tweet = []
 
     df["DateTime_Start"] = df["DateTime_Start"].dt.tz_localize(tz='America/Chicago')
     df["DateTime_Stop"] = df["DateTime_Stop"].dt.tz_localize(tz='America/Chicago')
@@ -31,6 +33,25 @@ def tweet_road_closure(api, df):
     df["DateTime_Stop_EU"] = df["DateTime_Stop"].dt.tz_convert(tz='Europe/Paris')
 
     for _, row in df.iterrows():
+        
+        if row['created'] == True:
+            img = Image.open("./images/Road_new.png")
+        elif "Canceled" in row["Status"]:
+            img = Image.open("./images/Road_canceled.png")
+        else:
+            img = Image.open("./images/Road_update.png")
+        
+        Date_start = row["DateTime_Start"].strftime("%A, %B %d, %Y - %I:%M %p")
+        Date_end = row["DateTime_Stop"].strftime("%A, %B %d, %Y - %I:%M %p")
+        Date_status = row["Status"]
+        title_font = ImageFont.truetype('fonts/dejavu-sans.book.ttf', 60)
+        img_edit = ImageDraw.Draw(img)
+        img_edit.text((273,97), str(Date_start), (0, 0, 0), font=title_font)
+        img_edit.text((167,235), str(Date_end), (0, 0, 0), font=title_font)
+        img_edit.text((617,359), str(Date_status), (0, 0, 0), font=title_font)
+
+        image_to_tweet.append(img)
+
         # STATUS
         if "Canceled" in row["Status"]:
             row["Status"] = "🚧 Road closure canceled"
@@ -38,7 +59,7 @@ def tweet_road_closure(api, df):
             row["Status"] = "🚧 Road closure scheduled"
         elif "Possible" in row["Status"]:
             row["Status"] = "🚧 Possible road closure"
-        
+           
         # DATETIME
         if row["Date"].strftime("%d") != row["DateTime_Stop"].strftime("%d"):
             row["DateTime_Stop"] = row["DateTime_Stop"].strftime("%A, %B %d, %Y - %I:%M %p")
@@ -76,9 +97,12 @@ def tweet_road_closure(api, df):
             row["Flight"]
         )
 
-    for n in range(len(message)):
+    for i in range(len(message)):
         try:
-            api.update_status(message[n])
+            img_byte_arr = io.BytesIO()
+            image_to_tweet[i].save(img_byte_arr, format='PNG')
+            img_byte_arr = img_byte_arr.getvalue()
+            api.update_status_with_media(filename = "", file = img_byte_arr, status = message[i])
         except Exception as e:
             print(e)    
     return

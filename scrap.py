@@ -51,9 +51,7 @@ def get_data_table(url):
 
     df["Date"] = pd.to_datetime(df['Date'], format="%A, %B %d, %Y")
 
-    df['index'] = (
-        df['DateTime_Start'].dt.strftime('%Y-%M-%d %H%m%s').str.replace(" ", "_", regex=False)
-    )
+    df['index'] = df['DateTime_Start'].values.astype(np.int64) // 10 ** 9
 
     return df
 
