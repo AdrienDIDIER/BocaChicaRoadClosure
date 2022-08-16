@@ -33,9 +33,8 @@ def get_data_table(url):
     df = pd.read_html(url)[0]
     df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
     
-    df["Date"] = df['Date'].str.replace('Tuesday, August 16, 202','Tuesday, August 16, 2022')
-    df["Date"] = df['Date'].str.replace('Monday, August 22, 202','Monday, August 22, 2022')
-    
+    df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
+    print(df)
 
     df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
     df["DateTime"] = df["DateTime"].str.replace("am", "AM", regex=False)
