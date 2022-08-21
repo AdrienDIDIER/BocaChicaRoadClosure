@@ -162,20 +162,11 @@ def getMSIB():
 def getTFR(url):
     url_ok = url
 
-    cookies = {
-        'JSESSIONID': '0000ha9pmE4c-kV-a-ZK63U4BCl:17ll4pu41',
-        'ak_bmsc': '301383ED91E9C982800A4BB0A280B84A~000000000000000000000000000000~YAAQPGgRYBdOYZaCAQAAfO7mwBCZvcCC2+fnFvXuI+pEMvwoyTZZM2SP8bVlnyotkK3osPrx7QSs8IZyWOcFr/cT2atVoU+j76efsfUsjSZbpGj946FWtu7evkbE2KvLUCfq2HklNXWMdD5UUUbmDYmn5Af01O9+Rurz/Iolwfz6FhJqSfRWylGrqAACOl7+df4hV3a+5knC9CdQoJWkhIhkfFk6MgDPbHYbPKWxFlhVd/DTKcZ3RkJYuFS4H0K9ZVLQ/p9fYmcKxmPZernTJZsz5TR++QBHtWHRTP3AR9VZ5om6mlXU8cGocee0YYNsiEJZbfIJvP/kVPTyLcylUvpBsF6icSj8P+Or+Bv3+UoMIYawu4y/g3LD80o9PSjDmX+M4Ay1a7Wuc/44S8q6t8GLXlOaZA==',
-        'bm_mi': '3B9D6F2953659260D4620F6F4D462A05~YAAQPGgRYBxOYZaCAQAAgQDnwBD+E4J9RCKpiXh6aQRxJ4PknyCem25u5RHMnNMC3NFCDU3wwMObZjApU/iSNd82kGB/9tDCPo+JwIFgURWIZco/HCmRlvSVDvwuGX1YvgR2p6vD5pgKCGaVnB4+hMvPsKnwiVzhw10TVm9S3L+kkOwPZCt6AMxbFuefdM0KxS34nQH2AkcNLNLuDNan82PTa2LluWmNi5S2ZgmI7BXR+l31yMdqyiPkiG7HUJsGht15MrhKg652WBgvzLDGNa4u0YPh4Ttvs/dCivQHTMSSbQ1E0X4lbAlpc4mh1n9zRfT6nRNaddEc~1',
-        'bm_sv': '08FC34F2E03176FF3300BB8261EF7B92~YAAQPGgRYB1OYZaCAQAAgQDnwBC/Kbx8XSOKv72S8jScpckGQVXutrBmLQOT+s5OszR+io5p+pIgxdLhx1T3fMPoPd8Q+gtcgnHYz+f4laVIBa71fr1KWF2INej+ZDZV6//obrz5FzR7/G+YFQV4YfTRJhBJxs5A+t5d38SaGJLOh4tlkhacxPxa3TGLvMeCcPu6BdsWvxhWXfO9b1TrNG/7srEd7SraZMPuswmqgQ9p3cXJS6NkFr3z5vcN~1',
-    }
-
     headers = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'Accept-Language': 'en,fr;q=0.9',
         'Cache-Control': 'max-age=0',
         'Connection': 'keep-alive',
-        # Requests sorts cookies= alphabetically
-        # 'Cookie': 'JSESSIONID=0000ha9pmE4c-kV-a-ZK63U4BCl:17ll4pu41; ak_bmsc=301383ED91E9C982800A4BB0A280B84A~000000000000000000000000000000~YAAQPGgRYBdOYZaCAQAAfO7mwBCZvcCC2+fnFvXuI+pEMvwoyTZZM2SP8bVlnyotkK3osPrx7QSs8IZyWOcFr/cT2atVoU+j76efsfUsjSZbpGj946FWtu7evkbE2KvLUCfq2HklNXWMdD5UUUbmDYmn5Af01O9+Rurz/Iolwfz6FhJqSfRWylGrqAACOl7+df4hV3a+5knC9CdQoJWkhIhkfFk6MgDPbHYbPKWxFlhVd/DTKcZ3RkJYuFS4H0K9ZVLQ/p9fYmcKxmPZernTJZsz5TR++QBHtWHRTP3AR9VZ5om6mlXU8cGocee0YYNsiEJZbfIJvP/kVPTyLcylUvpBsF6icSj8P+Or+Bv3+UoMIYawu4y/g3LD80o9PSjDmX+M4Ay1a7Wuc/44S8q6t8GLXlOaZA==; bm_mi=3B9D6F2953659260D4620F6F4D462A05~YAAQPGgRYBxOYZaCAQAAgQDnwBD+E4J9RCKpiXh6aQRxJ4PknyCem25u5RHMnNMC3NFCDU3wwMObZjApU/iSNd82kGB/9tDCPo+JwIFgURWIZco/HCmRlvSVDvwuGX1YvgR2p6vD5pgKCGaVnB4+hMvPsKnwiVzhw10TVm9S3L+kkOwPZCt6AMxbFuefdM0KxS34nQH2AkcNLNLuDNan82PTa2LluWmNi5S2ZgmI7BXR+l31yMdqyiPkiG7HUJsGht15MrhKg652WBgvzLDGNa4u0YPh4Ttvs/dCivQHTMSSbQ1E0X4lbAlpc4mh1n9zRfT6nRNaddEc~1; bm_sv=08FC34F2E03176FF3300BB8261EF7B92~YAAQPGgRYB1OYZaCAQAAgQDnwBC/Kbx8XSOKv72S8jScpckGQVXutrBmLQOT+s5OszR+io5p+pIgxdLhx1T3fMPoPd8Q+gtcgnHYz+f4laVIBa71fr1KWF2INej+ZDZV6//obrz5FzR7/G+YFQV4YfTRJhBJxs5A+t5d38SaGJLOh4tlkhacxPxa3TGLvMeCcPu6BdsWvxhWXfO9b1TrNG/7srEd7SraZMPuswmqgQ9p3cXJS6NkFr3z5vcN~1',
         'If-Modified-Since': 'Sun, 21 Aug 2022 14:36:31 GMT',
         'Referer': 'https://www.google.com/',
         'Sec-Fetch-Dest': 'document',
@@ -189,7 +180,7 @@ def getTFR(url):
         'sec-ch-ua-platform': '"Windows"',
     }
 
-    response = requests.get(url_ok, cookies=cookies, headers=headers)
+    response = requests.get(url_ok, headers=headers)
     print(response.text)
     exit()
     df = pd.read_html(
