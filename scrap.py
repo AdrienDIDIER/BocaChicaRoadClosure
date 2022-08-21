@@ -162,7 +162,6 @@ def getMSIB():
 def getTFR(url):
 
     headers = {
-        "Cache-Control: no-cache":"set-cookie, set-cookie2",
         "Connection": "keep-alive",
         "Content-Encoding": "gzip",
         "Content-Language": "en",
