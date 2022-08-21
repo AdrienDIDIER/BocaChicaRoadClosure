@@ -190,7 +190,8 @@ def getTFR(url):
     }
 
     response = requests.get(url_ok, cookies=cookies, headers=headers)
-    
+    print(response.text)
+    exit()
     df = pd.read_html(
         response.text,
         attrs = {
