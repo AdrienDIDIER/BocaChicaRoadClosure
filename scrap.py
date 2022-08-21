@@ -161,20 +161,7 @@ def getMSIB():
 
 def getTFR(url):
 
-    headers = {
-        "Connection": "keep-alive",
-        "Content-Encoding": "gzip",
-        "Content-Language": "en",
-        "Content-Length": "6306",
-        "Content-Type": "text/html;charset=windows-1252",
-        "Date": "Sun, 21 Aug 2022 15:16:27 GMT",
-        "Expires": "Thu, 01 Dec 1994 16:00:00 GMT",
-        "Server": "Oracle-iPlanet-Web-Server/7.0",
-        "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
-        "Vary": "Accept-Encoding",
-        "X-powered-by": "Servlet/3.0"}
-
-    r = requests.get(url, headers=headers)
+    r = requests.get(url)
     print(r.text)
     df = pd.read_html(
         r.text,
