@@ -160,7 +160,6 @@ def getMSIB():
     return text, pdf_file 
 
 def getTFR(url):
-    url = url
 
     headers = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image"
