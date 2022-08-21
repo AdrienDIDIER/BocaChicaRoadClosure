@@ -1,8 +1,6 @@
 import os 
-import io
 import cv2
 from dotenv import load_dotenv
-from optparse import OptionParser
 
 from selenium import webdriver  
 from selenium.webdriver.chrome.options import Options

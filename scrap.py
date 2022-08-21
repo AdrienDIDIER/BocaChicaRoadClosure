@@ -11,8 +11,6 @@ from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
 from datetime import datetime
 from bs4 import BeautifulSoup
-from Screenshot import Screenshot
-from selenium import webdriver
 from screenshot import make_screenshot
 
 def closest_colour(requested_colour):
