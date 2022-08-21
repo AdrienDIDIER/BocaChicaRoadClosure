@@ -162,12 +162,18 @@ def getMSIB():
 def getTFR(url):
 
     headers = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,imageapng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        "Accept-Encoding" :"gzip, deflate",
-        "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
-        "Dnt": "1",
-        "Upgrade-Insecure-Requests": "1",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36",}
+        "Cache-Control: no-cache":"set-cookie, set-cookie2",
+        "Connection": "keep-alive",
+        "Content-Encoding": "gzip",
+        "Content-Language": "en",
+        "Content-Length": "6306",
+        "Content-Type": "text/html;charset=windows-1252",
+        "Date": "Sun, 21 Aug 2022 15:16:27 GMT",
+        "Expires": "Thu, 01 Dec 1994 16:00:00 GMT",
+        "Server": "Oracle-iPlanet-Web-Server/7.0",
+        "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
+        "Vary": "Accept-Encoding",
+        "X-powered-by": "Servlet/3.0"}
 
     r = requests.get(url, headers=headers)
     print(r.text)
