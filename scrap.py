@@ -160,15 +160,14 @@ def getMSIB():
     return text, pdf_file 
 
 def getTFR(url):
-    url = url
+    from urllib.request import Request, urlopen
 
-    header = {
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.75 Safari/537.36",
-    "X-Requested-With": "XMLHttpRequest"
-    }
-
+    req = Request('https://tfr.faa.gov/tfr2/list.html', headers={'User-Agent': 'Mozilla/5.0'})
+    webpage = urlopen(req).read()
+    print(webpage)
+    exit()
     r = requests.get(url, headers=header)
-
+    print(r.text)
     df = pd.read_html(
         r.text,
         attrs = {
