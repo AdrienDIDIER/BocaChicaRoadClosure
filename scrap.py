@@ -162,8 +162,7 @@ def getMSIB():
 def getTFR(url):
 
     headers = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image"
-        "apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,imageapng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "Accept-Encoding" :"gzip, deflate",
         "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
         "Dnt": "1",

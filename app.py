@@ -76,7 +76,7 @@ def process():
     #     print(e)
 
     try:
-        df_tfr, tab_image = getTFR("https://tfr.faa.gov")
+        df_tfr, tab_image = getTFR("https://tfr.faa.gov/tfr2/list.jsp")
 
         if df_tfr is not None:
             count = 0
