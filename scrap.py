@@ -5,11 +5,15 @@ import numpy as np
 import dateutil.parser
 import webcolors
 import pdf2image
+import io
 
 from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
 from datetime import datetime
 from bs4 import BeautifulSoup
+from Screenshot import Screenshot
+from selenium import webdriver
+from screenshot import make_screenshot
 
 def closest_colour(requested_colour):
     min_colours = {}
@@ -156,3 +160,29 @@ def getMSIB():
     pdf_file = download_file(url_msib)
     text = pdf_to_img_to_text(pdf_file)
     return text, pdf_file 
+
+def getTFR(url):
+    df = pd.read_html(
+        url,
+        attrs = {
+            'width': '970',
+            'border': '0',
+            'cellpadding': '2',
+            'cellspacing': '1',
+            },
+        skiprows=[0,1],
+        header=0
+        )[0]
+    # Clear Columns Zoom + others ?
+    df = df.drop(columns=['Zoom','Unnamed: 7'])
+    # No footer
+    df = df.drop([len(df) - 1,len(df) - 2,len(df) - 3,])
+    # Only Space Operations
+    df = df[(df['Type'] == 'SPACE OPERATIONS') & (df['Description'].str.contains("Brownsville"))]
+    df = df.reset_index(drop=True)
+    tab_image = []
+    for _, row in df.iterrows():
+        img_bytes = make_screenshot(f"https://tfr.faa.gov/save_pages/detail_{row['NOTAM'].replace('/', '_')}.html")
+        tab_image.append(img_bytes)
+
+    return df, tab_image

@@ -88,3 +88,15 @@ def get_last_msib(client, id, table):
     if res is not None:
         return True
     return False
+
+def set_last_TFR(client, id, table):
+    client[os.getenv(table)].replace_one(
+        {"NOTAM":id}, {"NOTAM":id}, upsert=True
+    )
+    return 
+
+def get_last_TFR(client, id, table):
+    res = client[os.getenv(table)].find_one({"NOTAM": id})
+    if res is not None:
+        return True
+    return False
