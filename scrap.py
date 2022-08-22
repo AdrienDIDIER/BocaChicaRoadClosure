@@ -170,7 +170,6 @@ def getTFR(url):
     session.proxies.update(proxies)
 
     r = session.get(url)
-    print(r.text)
     df = pd.read_html(
         r.text,
         attrs = {
@@ -195,5 +194,3 @@ def getTFR(url):
         tab_image.append(img_bytes)
 
     return df, tab_image
-
-getTFR("https://tfr.faa.gov")
