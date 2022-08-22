@@ -161,7 +161,15 @@ def getMSIB():
 
 def getTFR(url):
 
-    r = requests.get(url)
+    proxies = {
+        'https': 'http://154.83.29.200:999',
+        'http': 'http://34.110.251.255:80'
+    }
+
+    session = requests.Session()
+    session.proxies.update(proxies)
+
+    r = session.get(url)
     print(r.text)
     df = pd.read_html(
         r.text,
@@ -187,3 +195,5 @@ def getTFR(url):
         tab_image.append(img_bytes)
 
     return df, tab_image
+
+getTFR("https://tfr.faa.gov")
