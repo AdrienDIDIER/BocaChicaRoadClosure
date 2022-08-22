@@ -76,9 +76,11 @@ def process():
 
     try:
         df_tfr, tab_image = getTFR("https://tfr.faa.gov/tfr2/list.jsp")
+        print("ok first")
         if df_tfr is not None:
             count = 0
             for _,row in df_tfr.iterrows():
+                print(row)
                 check_TFR(api, db, row, tab_image[count])
                 count += 1
         else:
