@@ -178,10 +178,10 @@ def check_TFR(api, db_client, row, image_bytes):
         d = row['Description']
         n = row['NOTAM'].replace('/', '_')
         to_tweet = f"🇺🇸 NEW TFR :\nType : {t}\nDescription : {d}\nSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
-        # api.update_status_with_media(
-        #     filename = "",
-        #     file = image_bytes,
-        #     status = to_tweet)
+        api.update_status_with_media(
+            filename = "",
+            file = image_bytes,
+            status = to_tweet)
 
         set_last_TFR(db_client, row['NOTAM'], "MONGO_DB_URL_TABLE_TFR")
     else:
