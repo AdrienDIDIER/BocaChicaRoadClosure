@@ -14,16 +14,17 @@ WINDOW_SIZE = "1920,1080"
 chrome_options = Options()  
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+chrome_options.binary_location = CHROME_PATH
 
 def make_screenshot(url):
     if not url.startswith('http'):
         raise Exception('URLs need to start with "http"')
 
     driver = webdriver.Chrome(
-        binary_location=CHROME_PATH,
         executable_path=CHROMEDRIVER_PATH,
         chrome_options=chrome_options
-    )  
+    )
+    
     driver.get(url)
     driver.save_screenshot("./tmp/tmp.jpg")
     img = cv2.imread("./tmp/tmp.jpg")
