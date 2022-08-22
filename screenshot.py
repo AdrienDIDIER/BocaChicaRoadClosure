@@ -10,7 +10,8 @@ load_dotenv()
 CHROME_PATH = os.getenv('CHROME_PATH')
 CHROMEDRIVER_PATH = os.getenv('CHROMEDRIVER_PATH')
 WINDOW_SIZE = "1920,1080"
-    
+TMP = os.getenv('TMP')
+
 chrome_options = Options()  
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
@@ -28,8 +29,8 @@ def make_screenshot(url):
     )
 
     driver.get(url)
-    driver.save_screenshot("./tmp/tmp.jpg")
-    img = cv2.imread("./tmp/tmp.jpg")
+    driver.save_screenshot(f"{TMP}/tmp.jpg")
+    img = cv2.imread(f"{TMP}/tmp.jpg")
     img = img[0:1080, 0:1000]
     _, im_buf_arr = cv2.imencode(".jpg", img)
     byte_im = im_buf_arr.tobytes()
