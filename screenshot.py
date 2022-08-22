@@ -34,6 +34,6 @@ def make_screenshot(url):
     img = img[0:1080, 0:1000]
     _, im_buf_arr = cv2.imencode(".jpg", img)
     byte_im = im_buf_arr.tobytes()
-    os.remove('./tmp/tmp.jpg')
+    os.remove(f"{TMP}/tmp.jpg")
     driver.close()
     return byte_im
