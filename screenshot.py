@@ -11,10 +11,16 @@ CHROME_PATH = os.getenv('CHROME_PATH')
 CHROMEDRIVER_PATH = os.getenv('CHROMEDRIVER_PATH')
 WINDOW_SIZE = "1920,1080"
 
+proxies = {
+        'https': 'http://159.197.250.171:3128',
+        'http': 'http://34.110.251.255:80'
+        }
+    
 chrome_options = Options()  
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--window-size=%s" % WINDOW_SIZE)
+chrome_options.add_argument('--proxy-server=%s' % proxies['https'])
 chrome_options.binary_location = CHROME_PATH
 
 def make_screenshot(url):
