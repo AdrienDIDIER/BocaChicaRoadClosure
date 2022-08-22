@@ -77,7 +77,7 @@ def process():
 
     try:
         df_tfr, tab_image = getTFR("https://tfr.faa.gov/tfr2/list.jsp")
-
+        print("ok")
         if df_tfr is not None:
             count = 0
             for _,row in df_tfr.iterrows():
