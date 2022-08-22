@@ -162,7 +162,7 @@ def getMSIB():
 def getTFR(url):
 
     proxies = {
-        'https': 'http://154.83.29.200:999',
+        'https': 'http://159.197.250.171:3128',
         'http': 'http://34.110.251.255:80'
     }
 
