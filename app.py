@@ -40,6 +40,13 @@ def process():
         df_to_tweet = pd.concat([df_created, df_updated])
 
         if len(df_to_tweet) > 0:
+            print(df)
+            print(row_added)
+            print(row_updated)
+            print(dates_list)
+            print(df_flight)
+            print(df_created)
+            print(df_updated)
             print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
             tweet_road_closure(api, df_to_tweet)
         else:

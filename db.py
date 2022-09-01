@@ -13,20 +13,19 @@ def get_database():
     
 def get_data_old_date(client):
     db_infos = client[os.getenv('MONGO_DB_URL_TABLE')].find()
-    data = pd.DataFrame(columns=['Date', 'Flight'])
+    data = pd.DataFrame(columns=['index', 'Flight'])
     for info in db_infos:
         if 'Flight' in info.keys():
-            data.loc[len(data.index)] = [info['Date'], info['Flight']]
+            data.loc[len(data.index)] = [info['index'], info['Flight']]
     return data
 
 def insert_new_road_closure(client, df):
     
     data = get_data_old_date(client)
-
-    df = df.merge(data, on='Date', how='left')
+    df = df.merge(data, on='index', how='left')
     df['Flight'] = df['Flight'].fillna(-1)
 
-    df_data_old = pd.DataFrame(list(client["RoadClosure"].find({})))
+    df_data_old = pd.DataFrame(list(client[os.getenv('MONGO_DB_URL_TABLE')].find()))
 
     list_id_new = []
     for row in df.to_dict(orient='records'):
@@ -37,7 +36,7 @@ def insert_new_road_closure(client, df):
             list_id_new.append(result.upserted_id)
 
     list_id_change = []
-    df_data = pd.DataFrame(list(client[os.getenv('MONGO_DB_URL_TABLE')].find({})))
+    df_data = pd.DataFrame(list(client[os.getenv('MONGO_DB_URL_TABLE')].find()))
     df_changes = pd.concat([df_data_old,df_data]).drop_duplicates(keep=False)
     for obj in df_changes['_id'].unique():
         if obj not in list_id_new:
