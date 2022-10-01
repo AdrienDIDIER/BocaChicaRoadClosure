@@ -26,6 +26,7 @@ def process():
     try:
         # GET ROAD closure
         df = get_data_table("https://www.cameroncountytx.gov/spacex/")
+        print(df)
         row_added, row_updated = insert_new_road_closure(db, df)
         dates_list = get_rc_to_check(db)
 
