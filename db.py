@@ -21,6 +21,8 @@ def get_data_old_date(client):
 
 def insert_new_road_closure(client, df):
     
+    df = df[~df['Type'].isna()]
+    
     data = get_data_old_date(client)
     df = df.merge(data, on='index', how='left')
     df['Flight'] = df['Flight'].fillna(-1)
