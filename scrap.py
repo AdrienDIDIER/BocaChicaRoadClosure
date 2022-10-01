@@ -70,9 +70,8 @@ def get_data_table(url):
         try:
             x = requests.get(url, proxies=p)
             df = pd.read_html(StringIO(x.text))[0]
-            print(df)
         except Exception:
-            print("Proxie not ok")
+            print(f"Proxie {str(p)} not ok")
             continue
 
         df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
@@ -204,36 +203,44 @@ def getMSIB():
 
 def getTFR(url):
 
-    proxies = {
-        'https': 'http://159.197.250.171:3128',
-        'http': 'http://34.110.251.255:80'
-    }
+    proxies = find_proxies_available()
 
-    session = requests.Session()
-    session.proxies.update(proxies)
+    for proxie in proxies:
+        if "http" in proxie:
+            p = {
+                'http': proxie,
+            }
+        else:
+            p = {
+                'https': proxie,
+            }
 
-    r = session.get(url)
-    df = pd.read_html(
-        r.text,
-        attrs = {
-            'width': '970',
-            'border': '0',
-            'cellpadding': '2',
-            'cellspacing': '1',
-            },
-        skiprows=[0,1],
-        header=0
-        )[0]
-    # Clear Columns Zoom + others ?
-    df = df.drop(columns=['Zoom','Unnamed: 7'])
-    # No footer
-    df = df.drop([len(df) - 1,len(df) - 2,len(df) - 3,])
-    # Only Space Operations
-    df = df[(df['Type'] == 'SPACE OPERATIONS') & (df['Description'].str.contains("Brownsville"))]
-    df = df.reset_index(drop=True)
-    tab_image = []
-    for _, row in df.iterrows():
-        img_bytes = make_screenshot(f"https://tfr.faa.gov/save_pages/detail_{row['NOTAM'].replace('/', '_')}.html")
-        tab_image.append(img_bytes)
+        try:
+            r = requests.get(url, proxies=p)
+            df = pd.read_html(
+                r.text,
+                attrs = {
+                    'width': '970',
+                    'border': '0',
+                    'cellpadding': '2',
+                    'cellspacing': '1',
+                    },
+                skiprows=[0,1],
+                header=0
+                )[0]
+        except Exception:
+            print(f"Proxie {str(p)} not ok")
+            continue
+        # Clear Columns Zoom + others ?
+        df = df.drop(columns=['Zoom','Unnamed: 7'])
+        # No footer
+        df = df.drop([len(df) - 1,len(df) - 2,len(df) - 3,])
+        # Only Space Operations
+        df = df[(df['Type'] == 'SPACE OPERATIONS') & (df['Description'].str.contains("Brownsville"))]
+        df = df.reset_index(drop=True)
+        tab_image = []
+        for _, row in df.iterrows():
+            img_bytes = make_screenshot(f"https://tfr.faa.gov/save_pages/detail_{row['NOTAM'].replace('/', '_')}.html")
+            tab_image.append(img_bytes)
 
     return df, tab_image

@@ -26,7 +26,6 @@ def process():
     try:
         # GET ROAD closure
         df = get_data_table("https://www.cameroncountytx.gov/spacex/")
-        print(df)
         row_added, row_updated = insert_new_road_closure(db, df)
         dates_list = get_rc_to_check(db)
 
@@ -72,18 +71,18 @@ def process():
         print("Error MSIB")
         print(e)
 
-    # try:
-    #     df_tfr, tab_image = getTFR("https://tfr.faa.gov/tfr2/list.jsp")
-    #     if df_tfr is not None:
-    #         count = 0
-    #         for _,row in df_tfr.iterrows():
-    #             check_TFR(api, db, row, tab_image[count])
-    #             count += 1
-    #     else:
-    #         print('No Tweet TFR')
-    # except Exception as e:
-    #     print("Error TFR")
-    #     print(e)
+    try:
+        df_tfr, tab_image = getTFR("https://tfr.faa.gov/tfr2/list.jsp")
+        if df_tfr is not None:
+            count = 0
+            for _,row in df_tfr.iterrows():
+                check_TFR(api, db, row, tab_image[count])
+                count += 1
+        else:
+            print('No Tweet TFR')
+    except Exception as e:
+        print("Error TFR")
+        print(e)
 
     print("Stop Execution")
 
