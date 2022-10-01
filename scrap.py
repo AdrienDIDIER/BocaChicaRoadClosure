@@ -5,8 +5,8 @@ import numpy as np
 import dateutil.parser
 import webcolors
 import pdf2image
-import io
-
+import requests
+from io import StringIO 
 from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
 from datetime import datetime
@@ -31,31 +31,65 @@ def get_colour_name(requested_colour):
         actual_name = None
     return actual_name, closest_name
 
+def find_proxies_available():
+    url = "https://free-proxy-list.net/"
+    response = requests.get(url)
+    if response.status_code != 200:
+        print("Error fetching page home")
+    else:
+        content = response.content
+
+    soup_page = BeautifulSoup(content, 'html.parser')
+    table = soup_page.find("table", {"class": "table-striped"})
+    rows = table.find_all('tr')
+    proxies = []
+    for row in rows:
+        cols = row.find_all('td')
+        cols = [ele.text.strip() for ele in cols]
+        if len(cols) > 0:
+            if cols[1] == "Yes":
+                proxies.append("https://" + cols[0] + ":" + cols[1])
+            else:
+                proxies.append("http://" + cols[0] + ":" + cols[1])
+    return proxies
+
+find_proxies_available()
+
 def get_data_table(url):
-    print(pd.read_html(url))
-    df = pd.read_html(url)[0]
-    print(df)
-    df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
-    
-    df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
 
-    df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
-    df["DateTime"] = df["DateTime"].str.replace("am", "AM", regex=False)
-    df["DateTime"] = df["DateTime"].str.replace("pm", "PM", regex=False)
+    proxies = find_proxies_available()
 
-    df[['DateTime_Start','DateTime_Stop']] = df["DateTime"].str.split("to",expand=True,)
-    del df["DateTime"]
+    for proxie in proxies:
+        try:
+            x = requests.get(url, proxies=proxie, timeout=5)
+            df = pd.read_html(StringIO(x.text))[0]
+            print(df)
+        except Exception:
+            print("Proxie not ok")
+            continue
 
-    df["DateTime_Start"] = df["Date"] + " " + df["DateTime_Start"]
+        df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
+        
+        df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
 
-    df["DateTime_Stop"] = np.where(df["DateTime_Stop"].str.contains(','), df["DateTime_Stop"].str.replace(',', ''), df["Date"] + " " + df["DateTime_Stop"])
+        df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
+        df["DateTime"] = df["DateTime"].str.replace("am", "AM", regex=False)
+        df["DateTime"] = df["DateTime"].str.replace("pm", "PM", regex=False)
 
-    df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start']) #.dt.tz_localize('America/Chicago')
-    df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop']) #.dt.tz_localize('America/Chicago')
+        df[['DateTime_Start','DateTime_Stop']] = df["DateTime"].str.split("to",expand=True,)
+        del df["DateTime"]
 
-    df["Date"] = pd.to_datetime(df['Date'], format="%A, %B %d, %Y")
+        df["DateTime_Start"] = df["Date"] + " " + df["DateTime_Start"]
 
-    df['index'] = df['DateTime_Start'].values.astype(np.int64) // 10 ** 9
+        df["DateTime_Stop"] = np.where(df["DateTime_Stop"].str.contains(','), df["DateTime_Stop"].str.replace(',', ''), df["Date"] + " " + df["DateTime_Stop"])
+
+        df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start']) #.dt.tz_localize('America/Chicago')
+        df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop']) #.dt.tz_localize('America/Chicago')
+
+        df["Date"] = pd.to_datetime(df['Date'], format="%A, %B %d, %Y")
+
+        df['index'] = df['DateTime_Start'].values.astype(np.int64) // 10 ** 9
+        break
 
     return df
 
