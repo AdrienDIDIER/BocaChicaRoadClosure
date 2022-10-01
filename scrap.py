@@ -58,8 +58,17 @@ def get_data_table(url):
     proxies = find_proxies_available()
 
     for proxie in proxies:
+        if "http" in proxie:
+            p = {
+                'http': proxie,
+            }
+        else:
+            p = {
+                'https': proxie,
+            }
+            
         try:
-            x = requests.get(url, proxies=proxie, timeout=5)
+            x = requests.get(url, proxies=p)
             df = pd.read_html(StringIO(x.text))[0]
             print(df)
         except Exception:
