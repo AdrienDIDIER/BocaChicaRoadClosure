@@ -32,13 +32,13 @@ def process():
         # GET INFOS ABOUT FLIGHT DURING ROAD closure
         df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
         flight_update(db, df_flight)
-
+        print('a')
         # GET DATA OF NEW AND UPDATED ROAD closure
         df_created = get_rc_with_id(db, row_added, True)
         df_updated = get_rc_with_id(db, row_updated, False)
-
+        print('a')
         df_to_tweet = pd.concat([df_created, df_updated])
-
+        print('a')
         if len(df_to_tweet) > 0:
             print(df)
             print(row_added)
@@ -81,18 +81,18 @@ def process():
         print("Error MSIB")
         print(e)
 
-    try:
-        df_tfr, tab_image = getTFR("https://tfr.faa.gov/tfr2/list.jsp")
-        if df_tfr is not None:
-            count = 0
-            for _,row in df_tfr.iterrows():
-                check_TFR(api, db, row, tab_image[count])
-                count += 1
-        else:
-            print('No Tweet TFR')
-    except Exception as e:
-        print("Error TFR")
-        print(e)
+    # try:
+    #     df_tfr, tab_image = getTFR("https://tfr.faa.gov/tfr2/list.jsp")
+    #     if df_tfr is not None:
+    #         count = 0
+    #         for _,row in df_tfr.iterrows():
+    #             check_TFR(api, db, row, tab_image[count])
+    #             count += 1
+    #     else:
+    #         print('No Tweet TFR')
+    # except Exception as e:
+    #     print("Error TFR")
+    #     print(e)
 
     print("Stop Execution")
 
