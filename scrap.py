@@ -32,7 +32,9 @@ def get_colour_name(requested_colour):
     return actual_name, closest_name
 
 def get_data_table(url):
+    print(pd.read_html(url))
     df = pd.read_html(url)[0]
+    print(df)
     df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
     
     df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
