@@ -53,8 +53,6 @@ def find_proxies_available():
                 proxies.append("http://" + cols[0] + ":" + cols[1])
     return proxies
 
-find_proxies_available()
-
 def get_data_table(url):
 
     proxies = find_proxies_available()
