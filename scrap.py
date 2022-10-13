@@ -77,11 +77,12 @@ def get_data_table(url):
         df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
         
         df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
+        df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', '2:00 am', regex=False)
 
         df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
         df["DateTime"] = df["DateTime"].str.replace("am", "AM", regex=False)
         df["DateTime"] = df["DateTime"].str.replace("pm", "PM", regex=False)
-        df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', '2:00 am', regex=False)
+
 
         df[['DateTime_Start','DateTime_Stop']] = df["DateTime"].str.split("to",expand=True,)
         del df["DateTime"]
