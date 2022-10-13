@@ -113,58 +113,71 @@ def pdf_to_img_to_text(file):
     return text
 
 def get_infos_flight(url, dates_list):
-    response = requests.get(url)
-    if response.status_code != 200:
-        print("Error fetching page home")
-    else:
-        content = response.content
-
-    soup = BeautifulSoup(content, 'html.parser')
-
-    all_articles = soup.find_all('article')[1:3]
-
-    df = pd.DataFrame(columns=['Date', 'Flight'])
-
-    for article in all_articles:
+    proxies = find_proxies_available()
+    
+    for proxie in proxies:
+        if "http" in proxie:
+            p = {
+                'http': proxie,
+            }
+        else:
+            p = {
+                'https': proxie,
+            }
+            
         try:
-            page_url = article.find('a').get('href')
-            response_page = requests.get(page_url)
-            if response_page.status_code != 200:
-                print("Error fetching page pdf")
-            else:
-                content_page = response_page.content
+            response = requests.get(url, proxies=p)
+            content = response.content
+        except Exception:
+            print(f"Proxie {str(p)} not ok")
+            continue
 
-            soup_page = BeautifulSoup(content_page, 'html.parser')
+        soup = BeautifulSoup(content, 'html.parser')
 
-            if soup_page.find("h1") is not None:
-                if ("Order Closing" or "Temporary And Intermittent Road Delay") in soup_page.find("h1").text:
-                    date = soup_page.find("h1").text.split(";")[1]
-                    
-                    if "Original" in date:
-                        date = date.replace("Original", '')
-                    date_formated = dateutil.parser.parse(date)
-                    date_formated = datetime.strftime(date_formated, "%Y-%m-%d")
+        all_articles = soup.find_all('article')[1:3]
 
-                    if date_formated  not in dates_list:
-                        continue
+        df = pd.DataFrame(columns=['Date', 'Flight'])
 
-                    print("Dowloading data for date : " + date)
-                    
-                    date = soup_page.find("h1").text.split(";")[1]
-                    pdf_link = soup_page.find('article').find(class_="gem-button-container").find("a").get('href')
-                    pdf_file = download_file(pdf_link)
-                    text = pdf_to_img_to_text(pdf_file)
-                    if "non-flight testing" in text:
-                        df.loc[len(df.index)] = [date, 0]
-                    elif " flight testing" in text:
-                        df.loc[len(df.index)] = [date, 0]
-                    else:
-                        df.loc[len(df.index)] = [date, 0]
-        except Exception as e:
-            print(e)
-    df['Date'] = df['Date'].str.replace('Original', '')
-    df['Date'] = pd.to_datetime(df['Date'])
-    return df
+        for article in all_articles:
+            try:
+                page_url = article.find('a').get('href')
+                response_page = requests.get(page_url)
+                if response_page.status_code != 200:
+                    print("Error fetching page pdf")
+                else:
+                    content_page = response_page.content
+
+                soup_page = BeautifulSoup(content_page, 'html.parser')
+
+                if soup_page.find("h1") is not None:
+                    if ("Order Closing" or "Temporary And Intermittent Road Delay") in soup_page.find("h1").text:
+                        date = soup_page.find("h1").text.split(";")[1]
+                        
+                        if "Original" in date:
+                            date = date.replace("Original", '')
+                        date_formated = dateutil.parser.parse(date)
+                        date_formated = datetime.strftime(date_formated, "%Y-%m-%d")
+
+                        if date_formated  not in dates_list:
+                            continue
+
+                        print("Dowloading data for date : " + date)
+                        
+                        date = soup_page.find("h1").text.split(";")[1]
+                        pdf_link = soup_page.find('article').find(class_="gem-button-container").find("a").get('href')
+                        pdf_file = download_file(pdf_link)
+                        text = pdf_to_img_to_text(pdf_file)
+                        if "non-flight testing" in text:
+                            df.loc[len(df.index)] = [date, 0]
+                        elif " flight testing" in text:
+                            df.loc[len(df.index)] = [date, 0]
+                        else:
+                            df.loc[len(df.index)] = [date, 0]
+            except Exception as e:
+                print(e)
+        df['Date'] = df['Date'].str.replace('Original', '')
+        df['Date'] = pd.to_datetime(df['Date'])
+        return df
 
 def img_to_text(crop_frame):
 
