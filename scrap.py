@@ -141,7 +141,7 @@ def get_infos_flight(url, dates_list):
         for article in all_articles:
             try:
                 page_url = article.find('a').get('href')
-                response_page = requests.get(page_url)
+                response_page = requests.get(page_url, proxies=p)
                 if response_page.status_code != 200:
                     print("Error fetching page pdf")
                 else:
