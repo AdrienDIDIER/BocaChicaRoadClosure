@@ -94,7 +94,7 @@ def get_data_table(url):
         df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start']) #.dt.tz_localize('America/Chicago')
         df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop']) #.dt.tz_localize('America/Chicago')
 
-        df["Date"] = pd.to_datetime(df['Date'], format="%A, %B %d, %Y",errors='ignore')
+        df["Date"] = pd.to_datetime(df['Date'], format="%A, %B %d, %Y")
 
         df['index'] = df['DateTime_Start'].values.astype(np.int64) // 10 ** 9
         break
