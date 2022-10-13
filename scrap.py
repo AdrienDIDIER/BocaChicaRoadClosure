@@ -77,10 +77,11 @@ def get_data_table(url):
         df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
         
         df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
-        
+
         df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
         df["DateTime"] = df["DateTime"].str.replace("am", "AM", regex=False)
         df["DateTime"] = df["DateTime"].str.replace("pm", "PM", regex=False)
+        df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', 'October 11 2022 2:00 AM', regex=False)
 
         df[['DateTime_Start','DateTime_Stop']] = df["DateTime"].str.split("to",expand=True,)
         del df["DateTime"]
@@ -89,8 +90,8 @@ def get_data_table(url):
 
         df["DateTime_Stop"] = np.where(df["DateTime_Stop"].str.contains(','), df["DateTime_Stop"].str.replace(',', ''), df["Date"] + " " + df["DateTime_Stop"])
 
-        df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start'],errors='ignore' ) #.dt.tz_localize('America/Chicago')
-        df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop'],errors='ignore') #.dt.tz_localize('America/Chicago')
+        df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start']) #.dt.tz_localize('America/Chicago')
+        df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop']) #.dt.tz_localize('America/Chicago')
 
         df["Date"] = pd.to_datetime(df['Date'], format="%A, %B %d, %Y",errors='ignore')
 
