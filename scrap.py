@@ -114,7 +114,7 @@ def pdf_to_img_to_text(file):
 
 def get_infos_flight(url, dates_list):
     proxies = find_proxies_available()
-    
+
     for proxie in proxies:
         if "http" in proxie:
             p = {
@@ -174,6 +174,7 @@ def get_infos_flight(url, dates_list):
                         else:
                             df.loc[len(df.index)] = [date, 0]
             except Exception as e:
+                print("slt")
                 print(e)
         df['Date'] = df['Date'].str.replace('Original', '')
         df['Date'] = pd.to_datetime(df['Date'])
