@@ -131,7 +131,8 @@ def get_infos_flight(url, dates_list):
         except Exception:
             print(f"Proxie {str(p)} not ok")
             continue
-
+        
+        print(content)
         soup = BeautifulSoup(content, 'html.parser')
 
         all_articles = soup.find_all('article')[1:3]
