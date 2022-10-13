@@ -135,7 +135,6 @@ def get_infos_flight(url, dates_list):
         soup = BeautifulSoup(content, 'html.parser')
 
         all_articles = soup.find_all('article')[1:3]
-        print(all_articles)
         df = pd.DataFrame(columns=['Date', 'Flight'])
 
         for article in all_articles:
