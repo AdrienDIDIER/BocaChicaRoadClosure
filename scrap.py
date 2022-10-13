@@ -81,7 +81,7 @@ def get_data_table(url):
         df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
         df["DateTime"] = df["DateTime"].str.replace("am", "AM", regex=False)
         df["DateTime"] = df["DateTime"].str.replace("pm", "PM", regex=False)
-        df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', 'October 11 2022 2:00 AM', regex=False)
+        df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', 'Tuesday October 11, 2022 2:00 AM', regex=False)
 
         df[['DateTime_Start','DateTime_Stop']] = df["DateTime"].str.split("to",expand=True,)
         del df["DateTime"]
