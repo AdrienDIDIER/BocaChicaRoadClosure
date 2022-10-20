@@ -73,9 +73,11 @@ def get_data_table(url):
         except Exception:
             print(f"Proxie {str(p)} not ok")
             continue
+        
 
         df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
-        
+        df = df[~df["Date"].isna()]
+
         df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
         df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', '2:00 am', regex=False)
 
@@ -173,7 +175,6 @@ def get_infos_flight(url, dates_list):
                         else:
                             df.loc[len(df.index)] = [date, 0]
             except Exception as e:
-                print("slt")
                 print(e)
         df['Date'] = df['Date'].str.replace('Original', '')
         df['Date'] = pd.to_datetime(df['Date'])
