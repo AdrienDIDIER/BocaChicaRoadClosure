@@ -70,12 +70,17 @@ def get_data_table(url):
         try:
             x = requests.get(url, proxies=p)
             df = pd.read_html(StringIO(x.text))[0]
+            df_tmp = pd.read_html(StringIO(x.text))[1]
         except Exception:
             print(f"Proxie {str(p)} not ok")
             continue
         
-
+        
+        df_tmp = df_tmp.rename(columns={"Unnamed: 0": "Type", "Temp. Delay Date": "Date", "Time of Delay": "DateTime"})
+        df_tmp["Status"] = 'Transport Closure'
         df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
+        df = pd.concat([df, df_tmp])
+
         df = df[~df["Date"].isna()]
 
         df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
