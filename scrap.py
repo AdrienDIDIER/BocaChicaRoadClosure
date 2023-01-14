@@ -79,6 +79,7 @@ def get_data_table(url):
         df = df[~df["Date"].isna()]
 
         df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
+        df['Date'] = df['Date'].str.replace(',', '')
         df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', '2:00 am', regex=False)
 
         df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
@@ -96,7 +97,6 @@ def get_data_table(url):
         df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start']) #.dt.tz_localize('America/Chicago')
         df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop']) #.dt.tz_localize('America/Chicago')
 
-        df["Date"] =  df["Date"].replace(",", "")
         df["Date"] = pd.to_datetime(df['Date'], format="%A %B %d %Y")
 
         df['index'] = df['DateTime_Start'].values.astype(np.int64) // 10 ** 9
