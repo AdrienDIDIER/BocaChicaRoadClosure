@@ -96,7 +96,7 @@ def hello_world():
     return "Hello !"
 
 @app.route("/go")
-def process():
+def process_task():
     process()
     return "Process launch"
 
