@@ -2,7 +2,9 @@ import dotenv
 import logging
 import pytz
 import warnings
+import os
 
+from flask import Flask
 from db import *
 from scrap import *
 from twitter import *
@@ -32,6 +34,7 @@ def process():
         # GET INFOS ABOUT FLIGHT DURING ROAD closure
         # df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
         # flight_update(db, df_flight)
+
         # GET DATA OF NEW AND UPDATED ROAD closure
         df_created = get_rc_with_id(db, row_added, True)
         df_updated = get_rc_with_id(db, row_updated, False)
@@ -86,5 +89,16 @@ def process():
 
     print("Stop Execution")
 
-if __name__ == "__main__":
+app = Flask(__name__)
+
+@app.route("/")
+def hello_world():
+    return "Hello !"
+
+@app.route("/go")
+def process():
     process()
+    return "Process launch"
+
+if __name__ == "__main__":
+    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
