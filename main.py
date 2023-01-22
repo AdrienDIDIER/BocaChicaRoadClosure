@@ -74,6 +74,9 @@ def process():
         print("Error MSIB")
         print(e)
 
+    print("\n")
+    getTFR()
+    print("\n")
     # try:
     #     df_tfr, tab_image = getTFR("https://tfr.faa.gov/tfr2/list.jsp")
     #     if df_tfr is not None:

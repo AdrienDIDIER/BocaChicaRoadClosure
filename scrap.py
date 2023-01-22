@@ -6,6 +6,8 @@ import dateutil.parser
 import webcolors
 import pdf2image
 import requests
+
+from tfr_scraper import tfr_scraper
 from io import StringIO 
 from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
@@ -31,82 +33,42 @@ def get_colour_name(requested_colour):
         actual_name = None
     return actual_name, closest_name
 
-def find_proxies_available():
-    url = "https://free-proxy-list.net/"
-    response = requests.get(url)
-    if response.status_code != 200:
-        print("Error fetching page home")
-    else:
-        content = response.content
-
-    soup_page = BeautifulSoup(content, 'html.parser')
-    table = soup_page.find("table", {"class": "table-striped"})
-    rows = table.find_all('tr')
-    proxies = []
-    for row in rows:
-        cols = row.find_all('td')
-        cols = [ele.text.strip() for ele in cols]
-        if len(cols) > 0:
-            if cols[1] == "Yes":
-                proxies.append("https://" + cols[0] + ":" + cols[1])
-            else:
-                proxies.append("http://" + cols[0] + ":" + cols[1])
-    return proxies
 
 def get_data_table(url):
 
-    proxies = find_proxies_available()
+    x = requests.get(url)
+    df = pd.read_html(StringIO(x.text))[0]
+    df_tmp = pd.read_html(StringIO(x.text))[1]  
+    
+    df_tmp = df_tmp.rename(columns={"Unnamed: 0": "Type", "Temp. Delay Date": "Date", "Time of Delay": "DateTime"})
+    df_tmp["Status"] = 'Transport Closure'
+    df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
+    df = pd.concat([df, df_tmp])
 
-    for proxie in proxies:
-        if "http" in proxie:
-            p = {
-                'http': proxie,
-            }
-        else:
-            p = {
-                'https': proxie,
-            }
-            
-        try:
-            x = requests.get(url, proxies=p)
-            df = pd.read_html(StringIO(x.text))[0]
-            df_tmp = pd.read_html(StringIO(x.text))[1]
-        except Exception:
-            print(f"Proxie {str(p)} not ok")
-            continue
-        
-        
-        df_tmp = df_tmp.rename(columns={"Unnamed: 0": "Type", "Temp. Delay Date": "Date", "Time of Delay": "DateTime"})
-        df_tmp["Status"] = 'Transport Closure'
-        df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
-        df = pd.concat([df, df_tmp])
+    df = df[~df["Date"].isna()]
 
-        df = df[~df["Date"].isna()]
+    df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
+    df['Date'] = df['Date'].str.replace(',', '')
+    df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', '2:00 am', regex=False)
 
-        df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
-        df['Date'] = df['Date'].str.replace(',', '')
-        df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', '2:00 am', regex=False)
-
-        df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
-        df["DateTime"] = df["DateTime"].str.replace("am", "AM", regex=False)
-        df["DateTime"] = df["DateTime"].str.replace("pm", "PM", regex=False)
+    df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
+    df["DateTime"] = df["DateTime"].str.replace("am", "AM", regex=False)
+    df["DateTime"] = df["DateTime"].str.replace("pm", "PM", regex=False)
 
 
-        df[['DateTime_Start','DateTime_Stop']] = df["DateTime"].str.split("to",expand=True,)
-        del df["DateTime"]
+    df[['DateTime_Start','DateTime_Stop']] = df["DateTime"].str.split("to",expand=True,)
+    del df["DateTime"]
 
-        df["DateTime_Start"] = df["Date"] + " " + df["DateTime_Start"]
+    df["DateTime_Start"] = df["Date"] + " " + df["DateTime_Start"]
 
-        df["DateTime_Stop"] = np.where(df["DateTime_Stop"].str.contains(','), df["DateTime_Stop"].str.replace(',', ''), df["Date"] + " " + df["DateTime_Stop"])
+    df["DateTime_Stop"] = np.where(df["DateTime_Stop"].str.contains(','), df["DateTime_Stop"].str.replace(',', ''), df["Date"] + " " + df["DateTime_Stop"])
 
-        df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start']) #.dt.tz_localize('America/Chicago')
-        df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop']) #.dt.tz_localize('America/Chicago')
+    df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start']) #.dt.tz_localize('America/Chicago')
+    df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop']) #.dt.tz_localize('America/Chicago')
 
-        df["Date"] = pd.to_datetime(df['Date'], format="%A %B %d %Y")
+    df["Date"] = pd.to_datetime(df['Date'], format="%A %B %d %Y")
 
-        df['index'] = df['DateTime_Start'].values.astype(np.int64) // 10 ** 9
-        break
-
+    df['index'] = df['DateTime_Start'].values.astype(np.int64) // 10 ** 9
     return df
 
 def download_file(download_url):
@@ -121,25 +83,10 @@ def pdf_to_img_to_text(file):
     return text
 
 def get_infos_flight(url, dates_list):
-    proxies = find_proxies_available()
+    
+        response = requests.get(url)
+        content = response.content
 
-    for proxie in proxies:
-        if "http" in proxie:
-            p = {
-                'http': proxie,
-            }
-        else:
-            p = {
-                'https': proxie,
-            }
-            
-        try:
-            response = requests.get(url, proxies=p)
-            content = response.content
-        except Exception:
-            print(f"Proxie {str(p)} not ok")
-            continue
-        
         soup = BeautifulSoup(content, 'html.parser')
 
         all_articles = soup.find_all('article')[1:3]
@@ -148,7 +95,7 @@ def get_infos_flight(url, dates_list):
         for article in all_articles:
             try:
                 page_url = article.find('a').get('href')
-                response_page = requests.get(page_url, proxies=p)
+                response_page = requests.get(page_url)
                 if response_page.status_code != 200:
                     print("Error fetching page pdf")
                 else:
@@ -224,46 +171,7 @@ def getMSIB():
     text = pdf_to_img_to_text(pdf_file)
     return text, pdf_file 
 
-def getTFR(url):
-
-    proxies = find_proxies_available()
-
-    for proxie in proxies:
-        if "http" in proxie:
-            p = {
-                'http': proxie,
-            }
-        else:
-            p = {
-                'https': proxie,
-            }
-
-        try:
-            r = requests.get(url, proxies=p)
-            df = pd.read_html(
-                r.text,
-                attrs = {
-                    'width': '970',
-                    'border': '0',
-                    'cellpadding': '2',
-                    'cellspacing': '1',
-                    },
-                skiprows=[0,1],
-                header=0
-                )[0]
-        except Exception:
-            print(f"Proxie {str(p)} not ok")
-            continue
-        # Clear Columns Zoom + others ?
-        df = df.drop(columns=['Zoom','Unnamed: 7'])
-        # No footer
-        df = df.drop([len(df) - 1,len(df) - 2,len(df) - 3,])
-        # Only Space Operations
-        df = df[(df['Type'] == 'SPACE OPERATIONS') & (df['Description'].str.contains("Brownsville"))]
-        df = df.reset_index(drop=True)
-        tab_image = []
-        for _, row in df.iterrows():
-            img_bytes = make_screenshot(f"https://tfr.faa.gov/save_pages/detail_{row['NOTAM'].replace('/', '_')}.html")
-            tab_image.append(img_bytes)
-
-    return df, tab_image
+def getTFR():
+    list_TFR = pd.DataFrame.from_records(tfr_scraper.tfr_list())
+    list_TFR_clean = list_TFR[(list_TFR['Type'] == 'SPACE OPERATIONS') & (list_TFR['Description'].str.contains("Brownsville"))]
+    print(list_TFR_clean)
