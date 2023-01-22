@@ -74,21 +74,15 @@ def process():
         print("Error MSIB")
         print(e)
 
-    print("\n")
-    getTFR()
-    print("\n")
-    # try:
-    #     df_tfr, tab_image = getTFR("https://tfr.faa.gov/tfr2/list.jsp")
-    #     if df_tfr is not None:
-    #         count = 0
-    #         for _,row in df_tfr.iterrows():
-    #             check_TFR(api, db, row, tab_image[count])
-    #             count += 1
-    #     else:
-    #         print('No Tweet TFR')
-    # except Exception as e:
-    #     print("Error TFR")
-    #     print(e)
+    try:
+        df_notam= getTFR()
+
+        for _, row in df_notam.iterrows():
+            check_TFR(api, db, row)
+    
+    except Exception as e:
+        print("Error TFR")
+        print(e)
 
     print("Stop Execution")
 

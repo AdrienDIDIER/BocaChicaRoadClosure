@@ -13,7 +13,6 @@ from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
 from datetime import datetime
 from bs4 import BeautifulSoup
-from screenshot import make_screenshot
 
 def closest_colour(requested_colour):
     min_colours = {}
@@ -32,7 +31,6 @@ def get_colour_name(requested_colour):
         closest_name = closest_colour(requested_colour)
         actual_name = None
     return actual_name, closest_name
-
 
 def get_data_table(url):
 
@@ -173,4 +171,4 @@ def getMSIB():
 def getTFR():
     list_TFR = pd.DataFrame.from_records(tfr_scraper.tfr_list())
     list_TFR_clean = list_TFR[(list_TFR['Type'] == 'SPACE OPERATIONS') & (list_TFR['Description'].str.contains("Brownsville"))]
-    print(list_TFR_clean)
+    return list_TFR_clean

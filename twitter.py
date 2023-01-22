@@ -4,6 +4,7 @@ import pandas as pd
 import re
 import pdf2image
 import io
+import requests
 from db import *
 from PIL import Image, ImageFont, ImageDraw 
 
@@ -171,18 +172,25 @@ def check_MSIB(api, db_client, text, pdf_file):
     else:
         print('No Tweet MSIB')
     
-def check_TFR(api, db_client, row, image_bytes):
-    if not get_last_TFR(db_client, row['NOTAM'], "MONGO_DB_URL_TABLE_TFR"):
+def check_TFR(api, db_client, row):
+    if not get_last_TFR(db_client, row['NOTAM'], 'MONGO_DB_URL_TABLE_TFR'):
+        print(f"Ajout TFR {row['NOTAM']} BDD")
+        i_formated = row['NOTAM'].replace("/", "_")
+        image_url = f"https://tfr.faa.gov/save_maps/sect_{i_formated}.gif"
+        img_data = requests.get(image_url).content
+
         print('Tweet TFR')
         t = row['Type']
         d = row['Description']
         n = row['NOTAM'].replace('/', '_')
-        to_tweet = f"🇺🇸 NEW TFR :\nType : {t}\nDescription : {d}\nSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
+
+        to_tweet = f"🇺🇸 NEW TFR :\nType : \t\t {t}\nDescription : \t\t{d}\nPlus : \t\tSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
+        
         api.update_status_with_media(
             filename = "",
-            file = image_bytes,
+            file = img_data,
             status = to_tweet)
 
-        set_last_TFR(db_client, row['NOTAM'], "MONGO_DB_URL_TABLE_TFR")
+        set_last_TFR(db_client, row['NOTAM'], 'MONGO_DB_URL_TABLE_TFR')
     else:
         print('No Tweet TFR')

@@ -80,7 +80,7 @@ def get_last_tweet(client, id, table):
 
 def set_last_msib(client, id, table):
     client[os.getenv(table)].replace_one(
-        {"last_issue_date":id}, {"last_issue_date":id}, upsert=True
+        {"NOTAM":id}, {"last_issue_date":id}, upsert=True
     )
     return 
 
