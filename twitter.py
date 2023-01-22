@@ -5,6 +5,8 @@ import re
 import pdf2image
 import io
 import requests
+import pytesseract
+
 from db import *
 from PIL import Image, ImageFont, ImageDraw 
 
@@ -114,8 +116,10 @@ def tweet_road_closure(api, df):
             print(e)    
     return
 
+
 def check_OP_Mary(api, db_client, account_name, nb_tweets):
-    tweets = api.user_timeline(screen_name=account_name,count=nb_tweets,include_rts=False)
+    tweets = api.user_timeline(screen_name=account_name,count=nb_tweets,include_rts=False, exclude_replies=True)
+
     tweets_clean = []
     for t in tweets:
         tweets_clean.append(t.__dict__)
@@ -124,18 +128,37 @@ def check_OP_Mary(api, db_client, account_name, nb_tweets):
     df_tweets.drop(["_api", "_json"],axis=1, inplace=True)
 
     for _, row in df_tweets.iterrows():
-        if 'alert' in row['text'].lower() and 'static fire' in row['text'].lower():
-            if not get_last_tweet(db_client, row['id'], "MONGO_DB_URL_TABLE_RC"):
-                print('Tweet Mary')
-                set_last_tweet(db_client, row['id'], "MONGO_DB_URL_TABLE_RC")
-                try:
-                    api.update_status("🚀🔥 Alert notice for possible Ship OR Booster static fire 🚀🔥")
-                except Exception as e:
-                    print(e)
-            else:
-                print('No Tweet Mary')
-        else:
-            print('No Tweet Mary')
+        if 'extended_entities' in row.index:
+            if isinstance(row['extended_entities'], dict):
+                for entitie in row['extended_entities']['media']:
+                    media_url = entitie['media_url']
+                    media_data = requests.get(media_url).content
+                    with open('image_name.jpg', 'wb') as handler:
+                        handler.write(media_data)
+
+                    img = Image.open('image_name.jpg')
+                    media_text = str(((pytesseract.image_to_string(img)))).lower()
+                    os.remove("image_name.jpg")
+
+                    if 'alert' in media_text and 'action' in media_text and 'required' in media_text:
+                        if not get_last_tweet(db_client, str(row['id']), "MONGO_DB_URL_TABLE_RC"):
+                            print(f"[Mary] Tweet Mary [{row['id']}]")
+                            set_last_tweet(db_client, str(row['id']), "MONGO_DB_URL_TABLE_RC")
+                            try:
+                                api.update_status_with_media(
+                                    filename = "",
+                                    file = media_data,
+                                    status = "🚀🔥 @BocaChicaGal: Alert notice for possible Ship OR Booster Test 🚀🔥"
+                                )
+                            except Exception as e:
+                                print(e)
+                        else:
+                            print(f"[Mary] Tweet already exist [{row['id']}]")
+
+                        break
+                    else:
+                        print(f"[Mary] Not an alert tweet [{row['id']}]")
+        print(f"[Mary] Not an alert tweet [{row['id']}]")
     return
 
 def check_NSF(api, db_client, text):
