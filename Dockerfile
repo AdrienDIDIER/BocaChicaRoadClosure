@@ -15,6 +15,9 @@ RUN apt-get install zip -y
 RUN apt-get install unzip -y
 RUN apt-get install wget -y
 RUN apt-get install curl -y
+RUN apt-get install gnupg -y
+RUN apt-get install gnupg2 -y
+RUN apt-get install gnupg1 -y
 
 # Install chromedriver
 RUN wget -N https://chromedriver.storage.googleapis.com/72.0.3626.69/chromedriver_linux64.zip -P ~/
