@@ -23,14 +23,14 @@ def process():
     print("Current Time =", current_time)
     # DATABASE
     db = get_database()
-    api = connect_api_twitter()
+    # api = connect_api_twitter()
     driver = connect_page_twitter()
 
     try:
         # GET ROAD closure
         df = get_data_table("https://www.cameroncountytx.gov/spacex/")
         row_added, row_updated = insert_new_road_closure(db, df)
-        dates_list = get_rc_to_check(db)
+        # dates_list = get_rc_to_check(db)
 
         # GET INFOS ABOUT FLIGHT DURING ROAD closure
         # df_flight = get_infos_flight("https://www.cameroncountytx.gov/spacex/", dates_list)
