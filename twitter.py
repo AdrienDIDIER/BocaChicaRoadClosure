@@ -158,9 +158,9 @@ def tweet_road_closure_without_api(driver, df):
 
         # TYPE
         if row["created"] is True:
-            row["created"] = "🇺🇸 NEW RC : \n"
+            row["created"] = "NEW RC : \n"
         else:
-            row["created"] = "🇺🇸 RC UDPATE : \n"
+            row["created"] = "RC UDPATE : \n"
 
         # FLIGHT
         if row["Flight"] == 0:
@@ -229,7 +229,7 @@ def check_TFR_without_api(driver, db_client, row):
         d = row['Description']
         n = row['NOTAM'].replace('/', '_')
 
-        to_tweet = f"🇺🇸 NEW TFR :\nType : \t\t {t}\nDescription : \t\t{d}\nPlus : \t\tSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
+        to_tweet = f"NEW TFR :\nType : \t\t {t}\nDescription : \t\t{d}\nPlus : \t\tSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
         
         image = Image.open(io.BytesIO(img_data))
         save_path = os.getcwd() + "/tmp/TFR.gif"
