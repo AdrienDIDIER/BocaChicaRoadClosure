@@ -40,6 +40,13 @@ def connect_page_twitter():
                 del cookie['sameSite']
             driver.add_cookie(cookie)
 
+    # with open("./cookies.json", 'rb') as cookiesfile:
+    #      cookies = json.load(cookiesfile)
+    #      for cookie in cookies:
+    #         if 'sameSite' in cookie:
+    #             del cookie['sameSite']
+    #         driver.add_cookie(cookie)
+
     # Get page after cookie for connection
     driver.get('https://twitter.com/home')
     return driver
@@ -49,9 +56,8 @@ def check_NSF_without_api(driver, db_client, text):
         print('Tweet NSF')
         try:
             element = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "public-DraftStyleDefault-block"))
+                EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
             )
-            element.click()
             element.send_keys(text)
             
             submit = WebDriverWait(driver, 10).until(
@@ -80,9 +86,8 @@ def check_MSIB_without_api(driver, db_client, text, pdf_file):
             image.save(save_path)
             
             element = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "public-DraftStyleDefault-block"))
+                EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
             )
-            element.click()
             element.send_keys(to_tweet)
 
             add_photo = WebDriverWait(driver, 10).until(
@@ -196,9 +201,8 @@ def tweet_road_closure_without_api(driver, df):
             image.save(save_path)
             
             element = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CLASS_NAME, "public-DraftStyleDefault-block"))
+                EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
             )
-            element.click()
             element.send_keys(message[i])
 
             add_photo = WebDriverWait(driver, 10).until(
@@ -223,22 +227,20 @@ def check_TFR_without_api(driver, db_client, row):
         i_formated = row['NOTAM'].replace("/", "_")
         image_url = f"https://tfr.faa.gov/save_maps/sect_{i_formated}.gif"
         img_data = requests.get(image_url).content
-
         print('Tweet TFR')
         t = row['Type']
         d = row['Description']
         n = row['NOTAM'].replace('/', '_')
 
-        to_tweet = f"NEW TFR :\nType : \t\t {t}\nDescription : \t\t{d}\nPlus : \t\tSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
+        to_tweet = f"NEW TFR :\nType : {t}\nDescription : {d}\nPlus : See here https://tfr.faa.gov/save_pages/detail_{n}.html"
         
         image = Image.open(io.BytesIO(img_data))
-        save_path = os.getcwd() + "/tmp/TFR.jpg"
+        save_path = os.getcwd() + "/tmp/TFR.png"
         image.save(save_path)
         
         element = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "public-DraftStyleDefault-block"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
         )
-        element.click()
         element.send_keys(to_tweet)
 
         add_photo = WebDriverWait(driver, 10).until(
