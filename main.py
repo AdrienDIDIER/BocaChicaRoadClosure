@@ -58,6 +58,7 @@ def process():
     try:
         textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
         if textNSF is not None:
+            print(textNSF)
             check_NSF_without_api(driver, db, textNSF)
         else:
             print('No Tweet NSF') 

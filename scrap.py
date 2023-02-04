@@ -139,7 +139,7 @@ def img_to_text(crop_frame):
     if closest_name == 'firebrick':
         text = str(((pytesseract.image_to_string(crop_frame))))
         textEN = text.replace("-\n", "")
-        return "🇺🇸 " + textEN
+        return textEN
     else:
         return None
 
