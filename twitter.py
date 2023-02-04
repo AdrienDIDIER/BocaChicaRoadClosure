@@ -142,11 +142,11 @@ def tweet_road_closure_without_api(driver, df):
 
         # STATUS
         if "Canceled" in row["Status"]:
-            row["Status"] = "🚧 Road closure canceled"
+            row["Status"] = "Road closure canceled"
         elif "Scheduled" in row["Status"]:
-            row["Status"] = "🚧 Road closure scheduled"
+            row["Status"] = "Road closure scheduled"
         elif "Possible" in row["Status"]:
-            row["Status"] = "🚧 Possible road closure"
+            row["Status"] = "Possible road closure"
            
         # DATETIME
         if row["Date"].strftime("%d") != row["DateTime_Stop"].strftime("%d"):
@@ -164,9 +164,9 @@ def tweet_road_closure_without_api(driver, df):
 
         # FLIGHT
         if row["Flight"] == 0:
-            row["Flight"] = "❌ NB : This is a non flight closure"
+            row["Flight"] = "NB : This is a non flight closure"
         elif row["Flight"] == 1:
-            row["Flight"] = "✅ NB : This can be a flight closure"
+            row["Flight"] = "NB : This can be a flight closure"
         else:
             row["Flight"] = ""
         
@@ -232,7 +232,7 @@ def check_TFR_without_api(driver, db_client, row):
         to_tweet = f"🇺🇸 NEW TFR :\nType : \t\t {t}\nDescription : \t\t{d}\nPlus : \t\tSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
         
         image = Image.open(io.BytesIO(img_data))
-        save_path = os.getcwd() + "/tmp/TFR.jpeg"
+        save_path = os.getcwd() + "/tmp/TFR.gif"
         image.save(save_path)
         
         element = WebDriverWait(driver, 10).until(
