@@ -6,3 +6,4 @@ env.json
 /.poppler-22.04.0
 /.tesseract_ocr
 test.py
+cookies.json

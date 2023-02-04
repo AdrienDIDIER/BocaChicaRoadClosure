@@ -24,6 +24,7 @@ def process():
     # DATABASE
     db = get_database()
     api = connect_api_twitter()
+    driver = connect_page_twitter()
 
     try:
         # GET ROAD closure
@@ -41,23 +42,23 @@ def process():
         df_to_tweet = pd.concat([df_created, df_updated])
         if len(df_to_tweet) > 0:
             print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
-            tweet_road_closure(api, df_to_tweet)
+            tweet_road_closure_without_api(driver, df_to_tweet)
         else:
             print("No Tweet RC")
     except Exception as e:
         print("Error RC")
         print(e)
 
-    try:
-        check_OP_Mary(api, db, "BocaChicaGal", 5)
-    except Exception as e:
-        print("Error MARY")
-        print(e)
+    # try:
+    #     check_OP_Mary(api, db, "BocaChicaGal", 5)
+    # except Exception as e:
+    #     print("Error MARY")
+    #     print(e)
     
     try:
         textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
         if textNSF is not None:
-            check_NSF(api, db, textNSF)
+            check_NSF_without_api(driver, db, textNSF)
         else:
             print('No Tweet NSF') 
     except Exception as e:
@@ -67,7 +68,7 @@ def process():
     try:
         textMSIB, pdf_file = getMSIB()
         if textMSIB is not None:
-            check_MSIB(api, db, textMSIB, pdf_file)
+            check_MSIB_without_api(driver, db, textMSIB, pdf_file)
         else:
             print('No Tweet MSIB')
     except Exception as e:
@@ -78,7 +79,7 @@ def process():
         df_notam= getTFR()
 
         for _, row in df_notam.iterrows():
-            check_TFR(api, db, row)
+            check_TFR_without_api(driver, db, row)
     
     except Exception as e:
         print("Error TFR")
