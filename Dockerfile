@@ -10,25 +10,35 @@ ENV APP_HOME /app
 WORKDIR $APP_HOME
 COPY . ./
 
+# We need wget to set up the PPA and xvfb to have a virtual screen and unzip to install the Chromedriver
+RUN apt-get install -y wget xvfb unzip
+
+# Set up the Chrome PPA
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+
+# Update the package list and install chrome
+RUN apt-get update -y
+RUN apt-get install -y google-chrome-stable
+
+# Set up Chromedriver Environment variables
+ENV CHROMEDRIVER_VERSION 2.19
+ENV CHROMEDRIVER_DIR /chromedriver
+RUN mkdir $CHROMEDRIVER_DIR
+
+# Download and install Chromedriver
+RUN wget -q --continue -P $CHROMEDRIVER_DIR "http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
+RUN unzip $CHROMEDRIVER_DIR/chromedriver* -d $CHROMEDRIVER_DIR
+
+# Put Chromedriver into the PATH
+ENV PATH $CHROMEDRIVER_DIR:$PATH
+
 # Install production dependencies.
-RUN apt install -y unzip xvfb libxi6 libgconf-2-4 
-RUN apt install default-jdk 
-RUN apt-get update
 RUN apt-get -y install tesseract-ocr 
 RUN apt-get -y install poppler-utils
-RUN apt-get -y install google-chrome-stable 
+
+# Pip
 RUN pip install --no-cache-dir -r requirements.txt
-
-RUN wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip 
-RUN unzip chromedriver_linux64.zip 
-
-RUN mv chromedriver /usr/bin/chromedriver 
-RUN chown root:root /usr/bin/chromedriver 
-RUN chmod +x /usr/bin/chromedriver 
-RUN wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar 
-RUN mv selenium-server-standalone-3.141.59.jar selenium-server-standalone.jar 
-RUN wget http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip 
-RUN unzip testng-6.8.7.jar.zip 
 
 # Run the web service on container startup. Here we use the gunicorn
 # webserver, with one worker process and 8 threads.
