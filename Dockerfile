@@ -14,6 +14,7 @@ COPY . ./
 RUN apt-get update
 RUN apt-get -y install tesseract-ocr 
 RUN apt-get -y install poppler-utils
+RUN apt-get -y install google-chrome-stable 
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Run the web service on container startup. Here we use the gunicorn
