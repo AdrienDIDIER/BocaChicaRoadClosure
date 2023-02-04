@@ -11,9 +11,9 @@ WORKDIR $APP_HOME
 COPY . ./
 
 RUN apt-get -y update
-RUN pip install --upgrade pip
 RUN apt-get install zip -y
 RUN apt-get install unzip -y
+RUN apt-get install wget -y
 
 # Install chromedriver
 RUN wget -N https://chromedriver.storage.googleapis.com/72.0.3626.69/chromedriver_linux64.zip -P ~/
@@ -34,6 +34,7 @@ RUN apt-get -y install tesseract-ocr
 RUN apt-get -y install poppler-utils
 
 # Pip
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Run the web service on container startup. Here we use the gunicorn
