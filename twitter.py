@@ -54,6 +54,7 @@ def connect_page_twitter():
 def check_NSF_without_api(driver, db_client, text):
     if not get_last_tweet(db_client, re.sub(r'[^\w\s]', '', text).lower(), "MONGO_DB_URL_TABLE_PT"):
         print('Tweet NSF')
+        print(text)
         try:
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
