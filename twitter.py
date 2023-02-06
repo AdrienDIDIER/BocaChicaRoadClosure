@@ -129,18 +129,18 @@ def tweet_road_closure_without_api(driver, df):
             img = img_tmp.copy()
             img_tmp.close()
         elif "Canceled" in row["Status"]:
-            img_tmp = Image.open(os.getcwd() + "./images/Road_canceled.png")
+            img_tmp = Image.open(os.getcwd() + "/images/Road_canceled.png")
             img = img_tmp.copy()
             img_tmp.close()
         else:
-            img_tmp = Image.open(os.getcwd() + "./images/Road_update.png")
+            img_tmp = Image.open(os.getcwd() + "/images/Road_update.png")
             img = img_tmp.copy()
             img_tmp.close()
         
         Date_start = row["DateTime_Start"].strftime("%A, %B %d, %Y - %I:%M %p")
         Date_end = row["DateTime_Stop"].strftime("%A, %B %d, %Y - %I:%M %p")
         Date_status = row["Status"]
-        title_font = ImageFont.truetype(os.getcwd() + './fonts/dejavu-sans.book.ttf', 60)
+        title_font = ImageFont.truetype(os.getcwd() + '/fonts/dejavu-sans.book.ttf', 60)
         img_edit = ImageDraw.Draw(img)
         img_edit.text((273,97), str(Date_start), (0, 0, 0), font=title_font)
         img_edit.text((167,235), str(Date_end), (0, 0, 0), font=title_font)
