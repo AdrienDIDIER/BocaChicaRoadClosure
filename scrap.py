@@ -148,10 +148,10 @@ def getScreenNSF(url):
     frame = stream.read()
     crop_frame = frame[995:1080, 245:1820]
     ret = img_to_text(crop_frame)   
-    ret = ret.replace("$", "S")
     if ret==None or '@NASASpaceflight' in ret:
         return None
     else:
+        ret = ret.replace("$", "S")
         return "🇺🇸 Infos @NASASpaceflight : \n" + ret
 
 def getMSIB():
