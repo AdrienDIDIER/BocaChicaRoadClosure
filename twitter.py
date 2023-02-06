@@ -30,7 +30,7 @@ def connect_page_twitter():
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--no-sandbox")
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), chrome_options=options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.get('https://twitter.com/')
 
     with open("/cookies/cookie-twitter", 'rb') as cookiesfile:

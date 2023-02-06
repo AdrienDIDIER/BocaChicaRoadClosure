@@ -7,12 +7,21 @@ import webcolors
 import pdf2image
 import requests
 
+from selenium import webdriver
 from tfr_scraper import tfr_scraper
 from io import StringIO 
 from vidgear.gears import CamGear
 from color_detector import BackgroundColorDetector
 from datetime import datetime
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 def closest_colour(requested_colour):
     min_colours = {}
@@ -155,20 +164,57 @@ def getScreenNSF(url):
         return "Infos @NASASpaceflight : \n" + ret
 
 def getMSIB():
-    url = "http://msib.bocachica.com/"
-    response = requests.get(url)
-    if response.status_code != 200:
-        print("Error fetching page home")
-    else:
-        content = response.content
 
-    soup_page = BeautifulSoup(content, 'html.parser')
-    url_msib = soup_page.find("frame")['src']
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--no-sandbox")
+
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver.get('https://homeport.uscg.mil/my-homeport/safety-Notifications/MSIB?cotpid=22')
+
+    _ = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "contents"))
+            )
+
+    df = pd.read_html(driver.page_source)[0]
+    df['Title_low'] = df['Title'].str.lower()
+
+    df_spacex = df[df['Title_low'].str.contains('spacex')].copy()
+
+    df_spacex['ts'] = pd.to_datetime(df_spacex['Modified'])
+    df_spacex = df_spacex.sort_values(by=['ts'],ascending=False)
+    
+    title_to_check = df_spacex.iloc[0]['Title']
+
+    url = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, f"//*[contains(text(),'{title_to_check}')]"))
+    )
+
+    href_page = url.get_attribute('href')
+
+    driver.get(href_page)
+    _ = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "idAttachmentsTable"))
+            )
+
+    url_page_2 = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, f"//a[contains(text(),'{title_to_check}')]"))
+    )
+
+    url_msib = url_page_2.get_attribute('href')
+    print("Check " + url_msib)
+
     pdf_file = download_file(url_msib)
     text = pdf_to_img_to_text(pdf_file)
+
     return text, pdf_file 
 
 def getTFR():
     list_TFR = pd.DataFrame.from_records(tfr_scraper.tfr_list())
     list_TFR_clean = list_TFR[(list_TFR['Type'] == 'SPACE OPERATIONS') & (list_TFR['Description'].str.contains("Brownsville"))]
     return list_TFR_clean
+
+getMSIB()
