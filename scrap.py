@@ -216,5 +216,3 @@ def getTFR():
     list_TFR = pd.DataFrame.from_records(tfr_scraper.tfr_list())
     list_TFR_clean = list_TFR[(list_TFR['Type'] == 'SPACE OPERATIONS') & (list_TFR['Description'].str.contains("Brownsville"))]
     return list_TFR_clean
-
-getMSIB()
