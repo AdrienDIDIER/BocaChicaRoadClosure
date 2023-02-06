@@ -59,7 +59,8 @@ def check_NSF_without_api(driver, db_client, text):
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
             )
-            element.send_keys(text)
+            driver.execute_script("arguments[0].innerHTML = '{}'".format(text),element)
+            element.send_keys(".")
             
             submit = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, "//div[@data-testid = 'tweetButtonInline']"))
@@ -73,7 +74,7 @@ def check_NSF_without_api(driver, db_client, text):
 
 def check_MSIB_without_api(driver, db_client, text, pdf_file):
     check_date = re.sub(r'[^\w\s]', '', text.split('issue date:')[1].split('spacex')[0]).lower().strip().replace(" ",'').replace('\n', ' ').replace('\r', '')
-    to_tweet = 'New MSIB :'
+    to_tweet = '🇺🇸 New MSIB :'
     if not get_last_msib(db_client, check_date, "MONGO_DB_URL_TABLE_MSIB"):
         print('Tweet MSIB')
         try:
@@ -89,7 +90,8 @@ def check_MSIB_without_api(driver, db_client, text, pdf_file):
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
             )
-            element.send_keys(to_tweet)
+            driver.execute_script("arguments[0].innerHTML = '{}'".format(text),element)
+            element.send_keys(".")
 
             add_photo = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "input[data-testid='fileInput']"))
@@ -164,9 +166,9 @@ def tweet_road_closure_without_api(driver, df):
 
         # TYPE
         if row["created"] is True:
-            row["created"] = "NEW RC : \n"
+            row["created"] = "🇺🇸 NEW RC : \n"
         else:
-            row["created"] = "RC UDPATE : \n"
+            row["created"] = "🇺🇸 RC UDPATE : \n"
 
         # FLIGHT
         if row["Flight"] == 0:
@@ -204,7 +206,8 @@ def tweet_road_closure_without_api(driver, df):
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
             )
-            element.send_keys(message[i])
+            driver.execute_script("arguments[0].innerHTML = '{}'".format(message[i]),element)
+            element.send_keys(".")
 
             add_photo = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "input[data-testid='fileInput']"))
@@ -233,7 +236,7 @@ def check_TFR_without_api(driver, db_client, row):
         d = row['Description']
         n = row['NOTAM'].replace('/', '_')
 
-        to_tweet = f"NEW TFR :\nType : {t}\nDescription : {d}\nPlus : See here https://tfr.faa.gov/save_pages/detail_{n}.html"
+        to_tweet = f"🇺🇸 NEW TFR :\nType : {t}\nDescription : {d}\nPlus : See here https://tfr.faa.gov/save_pages/detail_{n}.html"
         
         image = Image.open(io.BytesIO(img_data))
         save_path = os.getcwd() + "/tmp/TFR.png"
@@ -242,7 +245,8 @@ def check_TFR_without_api(driver, db_client, row):
         element = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
         )
-        element.send_keys(to_tweet)
+        driver.execute_script("arguments[0].innerHTML = '{}'".format(to_tweet),element)
+        element.send_keys(".")
 
         add_photo = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "input[data-testid='fileInput']"))

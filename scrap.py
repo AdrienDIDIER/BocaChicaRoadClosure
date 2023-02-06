@@ -152,7 +152,7 @@ def getScreenNSF(url):
     if ret==None or '@NASASpaceflight' in ret:
         return None
     else:
-        return "Infos @NASASpaceflight : \n" + ret
+        return "🇺🇸 Infos @NASASpaceflight : \n" + ret
 
 def getMSIB():
     url = "http://msib.bocachica.com/"
