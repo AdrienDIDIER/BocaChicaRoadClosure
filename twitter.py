@@ -40,7 +40,7 @@ def connect_page_twitter():
     #             del cookie['sameSite']
     #         driver.add_cookie(cookie)
 
-    with open("./cookies.json", 'rb') as cookiesfile:
+    with open(os.getenv('COOKIES_URL'), 'rb') as cookiesfile:
          cookies = json.load(cookiesfile)
          for cookie in cookies:
             if 'sameSite' in cookie:
