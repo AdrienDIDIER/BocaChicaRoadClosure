@@ -87,16 +87,18 @@ def process():
 
     print("Stop Execution")
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    return "Hello !"
+# @app.route("/")
+# def hello_world():
+#     return "Hello !"
 
-@app.route("/go")
-def process_task():
-    process()
-    return "Process launch"
+# @app.route("/go")
+# def process_task():
+#     process()
+#     return "Process launch"
 
-if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+# if __name__ == "__main__":
+#     app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+
+process()

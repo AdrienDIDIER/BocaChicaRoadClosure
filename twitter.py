@@ -33,19 +33,19 @@ def connect_page_twitter():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     driver.get('https://twitter.com/')
 
-    with open("/cookies/cookie-twitter", 'rb') as cookiesfile:
-         cookies = json.load(cookiesfile)
-         for cookie in cookies:
-            if 'sameSite' in cookie:
-                del cookie['sameSite']
-            driver.add_cookie(cookie)
-
-    # with open("./cookies.json", 'rb') as cookiesfile:
+    # with open("/cookies/cookie-twitter", 'rb') as cookiesfile:
     #      cookies = json.load(cookiesfile)
     #      for cookie in cookies:
     #         if 'sameSite' in cookie:
     #             del cookie['sameSite']
     #         driver.add_cookie(cookie)
+
+    with open("./cookies.json", 'rb') as cookiesfile:
+         cookies = json.load(cookiesfile)
+         for cookie in cookies:
+            if 'sameSite' in cookie:
+                del cookie['sameSite']
+            driver.add_cookie(cookie)
 
     # Get page after cookie for connection
     driver.get('https://twitter.com/home')
