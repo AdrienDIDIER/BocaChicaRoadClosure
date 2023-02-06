@@ -91,7 +91,7 @@ def check_MSIB_without_api(driver, db_client, text, pdf_file):
             element = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "br[data-text='true']"))
             )
-            element.send_keys(text)
+            element.send_keys(to_tweet)
 
             add_photo = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "input[data-testid='fileInput']"))
