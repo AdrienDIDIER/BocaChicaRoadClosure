@@ -218,7 +218,7 @@ def getMSIB():
 def url_get_contents(url):
     proxy = FreeProxy(anonym=True, rand=True, elite=True).get()
     print(proxy)
-    f = requests.get(url, proxies={'https' : proxy})
+    f = requests.get(url, proxies={'http' : proxy})
     print(f.text)
     return f.text
 
