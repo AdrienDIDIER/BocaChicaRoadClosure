@@ -171,7 +171,7 @@ def getMSIB():
     options.add_argument('--headless')
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-gpu")
-    options.add_argument("--remote-debugging-port=9222")
+    options.add_argument("--remote-debugging-port=9645")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--no-sandbox")
 
@@ -212,13 +212,13 @@ def getMSIB():
 
     pdf_file = download_file(url_msib)
     text = pdf_to_img_to_text(pdf_file)
-
+    driver.quit()
+    
     return text, pdf_file 
 
 def url_get_contents(url):
     proxy = FreeProxy().get()
     f = requests.post(url, data={"type" : "SPACE OPERATIONS"}, proxies={'https' : proxy})
-    print(f.text)
     return f.text
 
 def getTFR():

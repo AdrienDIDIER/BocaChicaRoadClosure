@@ -85,6 +85,7 @@ def process():
         print("Error TFR")
         print(e)
 
+    driver.quit()
     print("Stop Execution")
 
 # app = Flask(__name__)
