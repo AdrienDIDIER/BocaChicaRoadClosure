@@ -76,10 +76,10 @@ def process():
         print(e)
 
     try:
-        df_notam= getTFR()
+        df_notam, proxy= getTFR()
 
         for _, row in df_notam.iterrows():
-            check_TFR_without_api(driver, db, row)
+            check_TFR_without_api(driver, db, row, proxy)
     
     except Exception as e:
         print("Error TFR")

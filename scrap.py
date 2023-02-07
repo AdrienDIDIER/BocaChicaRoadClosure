@@ -221,12 +221,12 @@ def getMSIB():
 def url_get_contents(url):
     proxy = FreeProxy().get()
     f = requests.post(url, data={"type" : "SPACE OPERATIONS"}, proxies={'https' : proxy})
-    return f.text
+    return f.text, proxy
 
 def getTFR():
     """Downloads TFR table and parses, returns a list of tfrs as dictionaries"""
     url = "https://tfr.faa.gov/tfr2/list.jsp"
-    xhtml = url_get_contents(url)
+    xhtml, proxy = url_get_contents(url)
     p = HTMLTableParser()
     p.feed(xhtml)
     df = pd.DataFrame(p.tables[4])
@@ -237,4 +237,4 @@ def getTFR():
     list_TFR = df.dropna(how='any', subset=['NOTAM'])
     list_TFR_clean = list_TFR[(list_TFR['Type'] == 'SPACE OPERATIONS') & (list_TFR['Description'].str.contains("Brownsville"))]
     print(list_TFR_clean.head())
-    return list_TFR_clean
+    return list_TFR_clean, proxy

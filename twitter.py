@@ -224,12 +224,12 @@ def tweet_road_closure_without_api(driver, df):
             print(e)    
     return
 
-def check_TFR_without_api(driver, db_client, row):
+def check_TFR_without_api(driver, db_client, row, proxy):
     if not get_last_TFR(db_client, row['NOTAM'], 'MONGO_DB_URL_TABLE_TFR'):
         print(f"Ajout TFR {row['NOTAM']} BDD")
         i_formated = row['NOTAM'].replace("/", "_")
         image_url = f"https://tfr.faa.gov/save_maps/sect_{i_formated}.gif"
-        img_data = requests.get(image_url).content
+        img_data = requests.get(image_url, proxies={'http' : proxy}).content
         print('Tweet TFR')
         t = row['Type']
         d = row['Description']
