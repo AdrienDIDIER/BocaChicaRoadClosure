@@ -229,7 +229,7 @@ def check_TFR_without_api(driver, db_client, row, proxy):
         print(f"Ajout TFR {row['NOTAM']} BDD")
         i_formated = row['NOTAM'].replace("/", "_")
         image_url = f"https://tfr.faa.gov/save_maps/sect_{i_formated}.gif"
-        img_data = requests.get(image_url, proxies={'http' : proxy}).content
+        img_data = requests.get(image_url, proxies={'https' : proxy}).content
         print('Tweet TFR')
         t = row['Type']
         d = row['Description']
