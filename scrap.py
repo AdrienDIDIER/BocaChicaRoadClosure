@@ -22,6 +22,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
+from html_table_parser.parser import HTMLTableParser
+from fp.fp import FreeProxy
 
 def closest_colour(requested_colour):
     min_colours = {}
@@ -212,7 +214,24 @@ def getMSIB():
 
     return text, pdf_file 
 
+def url_get_contents(url):
+    proxy = FreeProxy(country_id=['US']).get()
+    print(proxy)
+    f = requests.get(url, proxies={'http' : proxy})
+    return f.text
+
 def getTFR():
-    list_TFR = pd.DataFrame.from_records(tfr_scraper.tfr_list())
+    """Downloads TFR table and parses, returns a list of tfrs as dictionaries"""
+    url = "https://tfr.faa.gov"
+    xhtml = url_get_contents(url)
+    p = HTMLTableParser()
+    p.feed(xhtml)
+    df = pd.DataFrame(p.tables[4])
+    new_header = df.iloc[2] #grab the first row for the header
+    df = df[3:] #take the data less the header row
+    df.columns = new_header #set the header row as the df header
+    df.replace("", None, inplace=True)
+    list_TFR = df.dropna(how='any', subset=['NOTAM'])
     list_TFR_clean = list_TFR[(list_TFR['Type'] == 'SPACE OPERATIONS') & (list_TFR['Description'].str.contains("Brownsville"))]
+    print(list_TFR_clean.head())
     return list_TFR_clean
