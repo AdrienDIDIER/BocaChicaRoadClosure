@@ -171,7 +171,6 @@ def getMSIB():
     options.add_argument('--headless')
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-gpu")
-    options.add_argument("--remote-debugging-port=9645")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--no-sandbox")
 
