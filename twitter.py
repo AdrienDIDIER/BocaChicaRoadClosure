@@ -238,7 +238,7 @@ def check_TFR_without_api(driver, db_client, row, proxy):
         to_tweet = f"NEW TFR :\nType : {t}\nDescription : {d}\nPlus : See here https://tfr.faa.gov/save_pages/detail_{n}.html"
         
         image = Image.open(io.BytesIO(img_data))
-        save_path = os.getcwd() + "/tmp/TFR.png"
+        save_path = os.getenv("URL_PROJECT") + "/tmp/TFR.png"
         image.save(save_path)    
         
         element = WebDriverWait(driver, 10).until(
