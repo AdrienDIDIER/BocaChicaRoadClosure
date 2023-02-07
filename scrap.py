@@ -217,8 +217,8 @@ def getMSIB():
 
 def url_get_contents(url):
     proxy = FreeProxy(google=True).get()
-    print(proxy)
     f = requests.post(url, data={"type" : "SPACE OPERATIONS"}, proxies={'http' : proxy})
+    print(f.text)
     return f.text
 
 def getTFR():
