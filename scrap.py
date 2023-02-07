@@ -215,7 +215,7 @@ def getMSIB():
     return text, pdf_file 
 
 def url_get_contents(url):
-    proxy = FreeProxy(country_id=['US']).get()
+    proxy = FreeProxy(country_id=['US'], elite=True).get()
     print(proxy)
     f = requests.get(url, proxies={'http' : proxy})
     print(f.text)
