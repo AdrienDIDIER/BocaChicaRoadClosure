@@ -216,7 +216,7 @@ def getMSIB():
     return text, pdf_file 
 
 def url_get_contents(url):
-    proxy = FreeProxy(anonym=True, rand=True, elite=True, google=True).get()
+    proxy = FreeProxy(google=True).get()
     print(proxy)
     f = requests.post(url, data={"type" : "SPACE OPERATIONS"}, proxies={'http' : proxy})
     return f.text
