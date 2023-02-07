@@ -216,8 +216,8 @@ def getMSIB():
     return text, pdf_file 
 
 def url_get_contents(url):
-    proxy = FreeProxy(google=True).get()
-    f = requests.post(url, data={"type" : "SPACE OPERATIONS"}, proxies={'http' : proxy})
+    proxy = FreeProxy().get()
+    f = requests.post(url, data={"type" : "SPACE OPERATIONS"}, proxies={'https' : proxy})
     print(f.text)
     return f.text
 
@@ -233,7 +233,8 @@ def getTFR():
     df.columns = new_header #set the header row as the df header
     df.replace("", None, inplace=True)
     list_TFR = df.dropna(how='any', subset=['NOTAM'])
-    print(list_TFR)
     list_TFR_clean = list_TFR[(list_TFR['Type'] == 'SPACE OPERATIONS') & (list_TFR['Description'].str.contains("Brownsville"))]
     print(list_TFR_clean.head())
     return list_TFR_clean
+
+getTFR()
