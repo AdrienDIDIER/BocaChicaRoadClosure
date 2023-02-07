@@ -236,5 +236,3 @@ def getTFR():
     list_TFR_clean = list_TFR[(list_TFR['Type'] == 'SPACE OPERATIONS') & (list_TFR['Description'].str.contains("Brownsville"))]
     print(list_TFR_clean.head())
     return list_TFR_clean
-
-getTFR()
