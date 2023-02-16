@@ -40,11 +40,10 @@ def process():
         df_created = get_rc_with_id(db, row_added, True)
         df_updated = get_rc_with_id(db, row_updated, False)
         df_to_tweet = pd.concat([df_created, df_updated])
-        print(df_to_tweet)
         if len(df_to_tweet) > 0:
             print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
             # tweet_road_closure_without_api(driver, df_to_tweet)
-            tweet_road_closure(api, df)
+            tweet_road_closure(api, df_to_tweet)
         else:
             print("No Tweet RC")
     except Exception as e:
