@@ -332,9 +332,9 @@ def tweet_road_closure(api, df):
 
         # TYPE
         if row["created"] is True:
-            row["created"] = "\U0001F1FA\U0001F1F8	 NEW RC : \n"
+            row["created"] = "🇺🇸 NEW RC : \n"
         else:
-            row["created"] = "\U0001F1FA\U0001F1F8	 RC UDPATE : \n"
+            row["created"] = "🇺🇸 RC UDPATE : \n"
 
         # FLIGHT
         if row["Flight"] == 0:
@@ -418,7 +418,7 @@ def check_NSF(api, db_client, text):
     if not get_last_tweet(db_client, re.sub(r'[^\w\s]', '', text).lower(), "MONGO_DB_URL_TABLE_PT"):
         print('Tweet NSF')
         try:
-            api.update_status(text)
+            api.update_status("🇺🇸 " + text)
         except Exception as e:
             print(e)
         set_last_tweet(db_client, re.sub(r'[^\w\s]', '', text).lower(), "MONGO_DB_URL_TABLE_PT")
@@ -459,7 +459,7 @@ def check_TFR(api, db_client, row, proxy):
         d = row['Description']
         n = row['NOTAM'].replace('/', '_')
 
-        to_tweet = f"NEW TFR :\nType : \t\t {t}\nDescription : \t\t{d}\nPlus : \t\tSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
+        to_tweet = f"🇺🇸 NEW TFR :\nType : \t\t {t}\nDescription : \t\t{d}\nPlus : \t\tSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
         
         api.update_status_with_media(
             filename = "",
