@@ -3,7 +3,9 @@ import logging
 import pytz
 import warnings
 import os
+import sentry_sdk
 
+from sentry_sdk import capture_message
 from flask import Flask
 from db import *
 from scrap import *
@@ -11,9 +13,12 @@ from twitter import *
 from datetime import datetime
 
 warnings.filterwarnings('ignore')
-# logging.getLogger().setLevel(logging.ERROR)
-
 dotenv.load_dotenv()
+
+sentry_sdk.init(
+    dsn=os.getenv("SENTRY_URL"),
+    traces_sample_rate=1.0
+)
 
 def process():
     print("Start Execution")
@@ -48,13 +53,13 @@ def process():
             print("No Tweet RC")
     except Exception as e:
         print("Error RC")
-        print(e)
+        capture_message("Error RC: " + str(e))
 
     try:
         check_OP_Mary(api, db, "BocaChicaGal", 5)
     except Exception as e:
         print("Error MARY")
-        print(e)
+        capture_message("Error MARY: " + str(e))
     
     try:
         textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
@@ -65,7 +70,7 @@ def process():
             print('No Tweet NSF') 
     except Exception as e:
         print("Error NSF")
-        print(e)
+        capture_message("Error NSF: " + str(e))
     
     try:
         textMSIB, pdf_file = getMSIB()
@@ -76,7 +81,7 @@ def process():
             print('No Tweet MSIB')
     except Exception as e:
         print("Error MSIB")
-        print(e)
+        capture_message("Error MSIB: " + str(e))
 
     try:
         df_notam, proxy= getTFR()
@@ -87,23 +92,9 @@ def process():
     
     except Exception as e:
         print("Error TFR")
-        print(e)
+        capture_message("Error TFR: " + str(e))
 
     # driver.quit()
     print("Stop Execution")
-
-# app = Flask(__name__)
-
-# @app.route("/")
-# def hello_world():
-#     return "Hello !"
-
-# @app.route("/go")
-# def process_task():
-#     process()
-#     return "Process launch"
-
-# if __name__ == "__main__":
-#     app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
 process()
