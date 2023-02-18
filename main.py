@@ -92,7 +92,7 @@ def process():
     
     except Exception as e:
         print("Error TFR")
-        capture_message("Error TFR: " + str(e))
+        capture_message("Error TFR")
 
     # driver.quit()
     print("Stop Execution")
