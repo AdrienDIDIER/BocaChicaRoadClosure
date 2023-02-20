@@ -186,9 +186,9 @@ def getMSIB():
 
     df = pd.read_html(driver.page_source)[0]
     df['Title_low'] = df['Title'].str.lower()
-
     df_spacex = df[df['Title_low'].str.contains('spacex')].copy()
-
+    if len(df_spacex) == 0:
+        return None, None 
     df_spacex['ts'] = pd.to_datetime(df_spacex['Modified'])
     df_spacex = df_spacex.sort_values(by=['ts'],ascending=False)
     
