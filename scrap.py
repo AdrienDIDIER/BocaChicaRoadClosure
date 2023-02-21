@@ -167,54 +167,64 @@ def getScreenNSF(url):
 
 def getMSIB():
 
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument("--disable-setuid-sandbox") 
-    options.add_argument("--remote-debugging-port=9222")
-    options.add_argument("--disable-dev-shm-using") 
-    options.add_argument("--disable-extensions") 
-    options.add_argument("--disable-gpu") 
-    options.add_argument("disable-infobars")
-    options.add_argument("--no-sandbox")
+    # options = Options()
+    # options.add_argument('--headless')
+    # options.add_argument("--disable-setuid-sandbox") 
+    # options.add_argument("--remote-debugging-port=9222")
+    # options.add_argument("--disable-dev-shm-using") 
+    # options.add_argument("--disable-extensions") 
+    # options.add_argument("--disable-gpu") 
+    # options.add_argument("disable-infobars")
+    # options.add_argument("--no-sandbox")
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver.get('https://homeport.uscg.mil/my-homeport/safety-Notifications/MSIB?cotpid=22')
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # driver.get('https://homeport.uscg.mil/my-homeport/safety-Notifications/MSIB?cotpid=22')
 
-    _ = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, "contents"))
-            )
+    # _ = WebDriverWait(driver, 10).until(
+    #             EC.presence_of_element_located((By.ID, "contents"))
+    #         )
 
-    df = pd.read_html(driver.page_source)[0]
-    df['Title_low'] = df['Title'].str.lower()
-    df_spacex = df[df['Title_low'].str.contains('spacex')].copy()
-    if len(df_spacex) == 0:
-        return None, None 
-    df_spacex['ts'] = pd.to_datetime(df_spacex['Modified'])
-    df_spacex = df_spacex.sort_values(by=['ts'],ascending=False)
+    # df = pd.read_html(driver.page_source)[0]
+    # df['Title_low'] = df['Title'].str.lower()
+    # df_spacex = df[df['Title_low'].str.contains('spacex')].copy()
+    # if len(df_spacex) == 0:
+    #     return None, None 
+    # df_spacex['ts'] = pd.to_datetime(df_spacex['Modified'])
+    # df_spacex = df_spacex.sort_values(by=['ts'],ascending=False)
     
-    title_to_check = df_spacex.iloc[0]['Title']
+    # title_to_check = df_spacex.iloc[0]['Title']
 
-    url = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, f"//*[contains(text(),'{title_to_check}')]"))
-    )
+    # url = WebDriverWait(driver, 10).until(
+    #             EC.presence_of_element_located((By.XPATH, f"//*[contains(text(),'{title_to_check}')]"))
+    # )
 
-    href_page = url.get_attribute('href')
+    # href_page = url.get_attribute('href')
 
-    driver.get(href_page)
-    _ = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, "idAttachmentsTable"))
-            )
+    # driver.get(href_page)
+    # _ = WebDriverWait(driver, 10).until(
+    #             EC.presence_of_element_located((By.ID, "idAttachmentsTable"))
+    #         )
 
-    url_page_2 = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, f"//a[contains(text(),'{title_to_check}')]"))
-    )
+    # url_page_2 = WebDriverWait(driver, 10).until(
+    #             EC.presence_of_element_located((By.XPATH, f"//a[contains(text(),'{title_to_check}')]"))
+    # )
 
-    url_msib = url_page_2.get_attribute('href')
-    print("Check " + url_msib)
+    # url_msib = url_page_2.get_attribute('href')
+    # print("Check " + url_msib)
+
+    url = "http://msib.bocachica.com/"
+    response = requests.get(url)
+    if response.status_code != 200:
+        print("Error fetching page home")
+    else:
+        content = response.content
+
+    soup_page = BeautifulSoup(content, 'html.parser')
+    url_msib = soup_page.find("frame")['src']
 
     pdf_file = download_file(url_msib)
     text = pdf_to_img_to_text(pdf_file)
-    driver.quit()
+    # driver.quit()
     
     return text, pdf_file 
 
