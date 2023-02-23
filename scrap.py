@@ -58,6 +58,7 @@ def get_data_table(url):
 
     df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
     df['Date'] = df['Date'].str.replace(',', '')
+
     df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', '2:00 am', regex=False)
 
     df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
@@ -68,15 +69,29 @@ def get_data_table(url):
     df[['DateTime_Start','DateTime_Stop']] = df["DateTime"].str.split("to",expand=True,)
     del df["DateTime"]
 
-    df["DateTime_Start"] = df["Date"] + " " + df["DateTime_Start"]
+    Date = []
+    DateTime_Start = []
+    DateTime_Stop = []
+    for _, row in df.iterrows():
+        if 'to' in row['Date']:
+            DateTime_Start.append((row["Date"].split("to")[0] + " " + row["DateTime_Start"]).replace(',', ''))
+            DateTime_Stop.append((row["Date"].split("to")[1] + " " + row["DateTime_Stop"]).replace(',', ''))
+            Date.append(row['Date'].split("to")[0])
+        else:
+            DateTime_Start.append((row["Date"] + " " + row["DateTime_Start"]).replace(',', ''))
+            DateTime_Stop.append(row["Date"] + " " + row["DateTime_Stop"].replace(',', ''))
+            Date.append(row['Date'])
 
-    df["DateTime_Stop"] = np.where(df["DateTime_Stop"].str.contains(','), df["DateTime_Stop"].str.replace(',', ''), df["Date"] + " " + df["DateTime_Stop"])
+    df["Date"] = Date
+    df["DateTime_Start"] = DateTime_Start
+    df["DateTime_Stop"] = DateTime_Stop
 
     df["DateTime_Start"] = pd.to_datetime(df['DateTime_Start']) #.dt.tz_localize('America/Chicago')
     df["DateTime_Stop"] = pd.to_datetime(df['DateTime_Stop']) #.dt.tz_localize('America/Chicago')
 
     df["Date"] = pd.to_datetime(df['Date'])
-
+    
+    df['Type'] = df['Type'].fillna("Date")
     df['index'] = df['DateTime_Start'].values.astype(np.int64) // 10 ** 9
     return df
 
