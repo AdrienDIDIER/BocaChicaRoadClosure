@@ -57,8 +57,9 @@ def get_data_table(url):
     df = df[~df["Date"].isna()]
 
     df['Date'] = df['Date'].str.replace(r'(202$)', '2022')
+    df['Date'] = df['Date'].str.replace('Wednesday, March 8th thru 9th, 2023', 'Wednesday March 8th 2023 thru Thursday March 9th, 2023')
     df['Date'] = df['Date'].str.replace(',', '')
-
+    print(df)    
     df['DateTime'] = df['DateTime'].str.replace('2:00 am of Oct 11', '2:00 am', regex=False)
 
     df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
@@ -77,6 +78,10 @@ def get_data_table(url):
             DateTime_Start.append((row["Date"].split("to")[0] + " " + row["DateTime_Start"]).replace(',', ''))
             DateTime_Stop.append((row["Date"].split("to")[1] + " " + row["DateTime_Stop"]).replace(',', ''))
             Date.append(row['Date'].split("to")[0])
+        elif 'thru' in row['Date']:
+            DateTime_Start.append((row["Date"].split("thru")[0] + " " + row["DateTime_Start"]).replace(',', ''))
+            DateTime_Stop.append((row["Date"].split("thru")[1] + " " + row["DateTime_Stop"]).replace(',', ''))
+            Date.append(row['Date'].split("thru")[0])
         else:
             DateTime_Start.append((row["Date"] + " " + row["DateTime_Start"]).replace(',', ''))
             DateTime_Stop.append(row["Date"] + " " + row["DateTime_Stop"].replace(',', ''))
