@@ -277,6 +277,82 @@ def connect_api_twitter():
 
     return api
 
+def tweet_road_closure_simple(api, df):
+
+    print(df)
+
+    message = []
+    image_to_tweet = []
+
+    for _, row in df.iterrows():
+        
+        if row['created'] == True:
+            img_tmp = Image.open(os.getenv("URL_PROJECT") + "/images/Road_new.png")
+            img = img_tmp.copy()
+            img_tmp.close()
+        elif "Canceled" in row["Status"]:
+            img_tmp = Image.open(os.getenv("URL_PROJECT") + "/images/Road_canceled.png")
+            img = img_tmp.copy()
+            img_tmp.close()
+        else:
+            img_tmp = Image.open(os.getenv("URL_PROJECT") + "/images/Road_update.png")
+            img = img_tmp.copy()
+            img_tmp.close()
+        
+        Date_start = row["Date"]
+        Date_end = row["DateTime"]
+        Date_status = row["Status"]
+        title_font = ImageFont.truetype(os.getenv("URL_PROJECT") + '/fonts/dejavu-sans.book.ttf', 60)
+        img_edit = ImageDraw.Draw(img)
+        img_edit.text((273,97), str(Date_start), (0, 0, 0), font=title_font)
+        img_edit.text((167,235), str(Date_end), (0, 0, 0), font=title_font)
+        img_edit.text((617,359), str(Date_status), (0, 0, 0), font=title_font)
+
+        image_to_tweet.append(img)
+
+        # STATUS
+        if "Canceled" in row["Status"]:
+            row["Status"] = "🚧 Road closure canceled"
+        elif "Scheduled" in row["Status"]:
+            row["Status"] = "🚧 Road closure scheduled"
+        elif "Possible" in row["Status"]:
+            row["Status"] = "🚧 Possible road closure"
+
+        # TYPE
+        if row["created"] is True:
+            row["created"] = "🇺🇸 NEW RC : \n"
+        else:
+            row["created"] = "🇺🇸 RC UDPATE : \n"
+
+        # FLIGHT
+        if row["Flight"] == 0:
+            row["Flight"] = "❌ NB : This is a non flight closure"
+        elif row["Flight"] == 1:
+            row["Flight"] = "✅ NB : This can be a flight closure"
+        else:
+            row["Flight"] = ""
+        
+        message.append(
+            row["created"]+
+            row["Type"] +
+            ": " +
+            row["Status"] +
+            " from " +
+            Date_start + " " + Date_end + 
+            " Boca Chica Time \n" +
+            row["Flight"]
+        )
+
+    for i in range(len(message)):
+        try:
+            img_byte_arr = io.BytesIO()
+            image_to_tweet[i].save(img_byte_arr, format='PNG')
+            img_byte_arr = img_byte_arr.getvalue()
+            api.update_status_with_media(filename = "", file = img_byte_arr, status = message[i])
+        except Exception as e:
+            print(e)    
+    return
+
 def tweet_road_closure(api, df):
 
     message = []

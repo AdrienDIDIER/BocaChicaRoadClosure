@@ -33,7 +33,7 @@ def process():
 
     try:
         # GET ROAD closure
-        df = get_data_table("https://www.cameroncountytx.gov/spacex/")
+        df = get_data_table_simple("https://www.cameroncountytx.gov/spacex/")
         row_added, row_updated = insert_new_road_closure(db, df)
         # dates_list = get_rc_to_check(db)
 
@@ -48,11 +48,11 @@ def process():
         if len(df_to_tweet) > 0:
             print(f"Update / Creation of {len(df_created) + len(df_updated)} RC.")
             # tweet_road_closure_without_api(driver, df_to_tweet)
-            tweet_road_closure(api, df_to_tweet)
+            tweet_road_closure_simple(api, df_to_tweet)
         else:
             print("No Tweet RC")
     except Exception as e:
-        print("Error RC")
+        print("Error RC" + str(e))
         capture_message("Error RC: " + str(e))
 
     try:

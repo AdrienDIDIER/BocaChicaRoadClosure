@@ -43,6 +43,27 @@ def get_colour_name(requested_colour):
         actual_name = None
     return actual_name, closest_name
 
+def get_data_table_simple(url):
+
+    x = requests.get(url)
+    df = pd.read_html(StringIO(x.text))[0]
+    df_tmp = pd.read_html(StringIO(x.text))[1]  
+    
+    df_tmp = df_tmp.rename(columns={"Unnamed: 0": "Type", "Temp. Delay Date": "Date", "Time of Delay": "DateTime"})
+    df_tmp["Status"] = 'Transport Closure'
+    df = df.rename(columns={"Unnamed: 0": "Type", "Temp. Closure Date": "Date", "Time of Closure": "DateTime", "Current Beach Status": "Status"}, errors="raise")
+    df = pd.concat([df, df_tmp])
+
+    df = df[~df["Date"].isna()]
+
+    df["DateTime"] = df["DateTime"].str.replace(".", "", regex=False)
+    df["DateTime"] = df["DateTime"].str.replace("am", "AM", regex=False)
+    df["DateTime"] = df["DateTime"].str.replace("pm", "PM", regex=False)
+    
+    df['Type'] = df['Type'].fillna("Date")
+    df['index'] = df['Date'] + " " + df['DateTime']
+    return df
+
 def get_data_table(url):
 
     x = requests.get(url)
