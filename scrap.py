@@ -199,8 +199,8 @@ def getScreenNSF(url):
     stream = CamGear(source=url, stream_mode=True, logging=False).start() # YouTube Video URL as input
     frame = stream.read()
     crop_frame = frame[995:1080, 245:1820]
-    ret = img_to_text(crop_frame)   
-    if ret==None or '@NASASpaceflight' in ret:
+    ret = img_to_text(crop_frame)
+    if ret==None or '@nasaspaceflight' in ret.lower():
         return None
     else:
         ret = ret.replace("$", "S")
