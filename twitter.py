@@ -265,17 +265,11 @@ def check_TFR_without_api(driver, db_client, row, proxy):
 
 def connect_api_twitter():
     # Authenticate to Twitter
-    auth = tweepy.OAuthHandler(os.getenv("TWITTER_API_KEY"), os.getenv("TWITTER_API_SECRET_KEY"))
-    auth.set_access_token(os.getenv("TWITTER_ACCESS_TOKEN"), os.getenv("TWITTER_ACCESS_TOKEN_SECRET"))
-    api = tweepy.API(auth)
-    
-    try:
-        api.verify_credentials()
-        print("Authentication Successful")
-    except:
-        print("Authentication Error")
-
-    return api
+    client = tweepy.Client(
+        consumer_key=os.getenv("TWITTER_API_KEY"), consumer_secret=os.getenv("TWITTER_API_SECRET_KEY"),
+        access_token=os.getenv("TWITTER_ACCESS_TOKEN"), access_token_secret=os.getenv("TWITTER_ACCESS_TOKEN_SECRET")
+    )
+    return client
 
 def tweet_road_closure_simple(api, df):
 
@@ -348,7 +342,7 @@ def tweet_road_closure_simple(api, df):
             img_byte_arr = io.BytesIO()
             image_to_tweet[i].save(img_byte_arr, format='PNG')
             img_byte_arr = img_byte_arr.getvalue()
-            api.update_status_with_media(filename = "", file = img_byte_arr, status = message[i])
+            api.create_tweet(text=message[i])
         except Exception as e:
             print(e)    
     return
@@ -494,7 +488,7 @@ def check_NSF(api, db_client, text):
     if not get_last_tweet(db_client, re.sub(r'[^\w\s]', '', text).lower(), "MONGO_DB_URL_TABLE_PT"):
         print('Tweet NSF')
         try:
-            api.update_status("🇺🇸 " + text)
+            api.create_tweet(text="🇺🇸 " + text)
         except Exception as e:
             print(e)
         set_last_tweet(db_client, re.sub(r'[^\w\s]', '', text).lower(), "MONGO_DB_URL_TABLE_PT")
@@ -516,7 +510,7 @@ def check_MSIB(api, db_client, text, pdf_file):
             buf.seek(0)
             # Read the bytes from the buffer
             image_bytes = buf.read()
-            api.update_status_with_media(filename = "", file = image_bytes, status = to_tweet)
+            api.create_tweet(text = to_tweet)
         except Exception as e:
             print(e)
         set_last_msib(db_client, check_date, "MONGO_DB_URL_TABLE_MSIB")
@@ -537,10 +531,7 @@ def check_TFR(api, db_client, row, proxy):
 
         to_tweet = f"🇺🇸 NEW TFR :\nType : \t\t {t}\nDescription : \t\t{d}\nPlus : \t\tSee here https://tfr.faa.gov/save_pages/detail_{n}.html"
         
-        api.update_status_with_media(
-            filename = "",
-            file = img_data,
-            status = to_tweet)
+        api.create_tweet(text = to_tweet)
 
         set_last_TFR(db_client, row['NOTAM'], 'MONGO_DB_URL_TABLE_TFR')
     else:

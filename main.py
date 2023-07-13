@@ -55,11 +55,11 @@ def process():
         print("Error RC" + str(e))
         capture_message("Error RC: " + str(e))
 
-    try:
-        check_OP_Mary(api, db, "BocaChicaGal", 5)
-    except Exception as e:
-        print("Error MARY")
-        capture_message("Error MARY: " + str(e))
+    # try:
+    #     check_OP_Mary(api, db, "BocaChicaGal", 5)
+    # except Exception as e:
+    #     print("Error MARY")
+    #     capture_message("Error MARY: " + str(e))
     
     try:
         textNSF = getScreenNSF("https://www.youtube.com/watch?v=mhJRzQsLZGg")
